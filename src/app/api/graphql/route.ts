@@ -1,5 +1,6 @@
 import { ApolloServer } from '@apollo/server'
 import { startServerAndCreateNextHandler } from '@as-integrations/next'
+import { create } from 'domain'
 import { gql } from 'graphql-tag'
 import { NextRequest } from 'next/server'
 
@@ -17,6 +18,18 @@ const typeDefs = gql`
 
   type Query {
     newsArticles: [NewsArticle]
+  }
+
+  input NewsArticleInput {
+    title: String!
+    author: String!
+    text: String!
+    date: String!
+    originUrl: String!
+  }
+
+  type Mutation {
+    createNewsArticle(article: NewsArticleInput): NewsArticle
   }
 `
 
@@ -36,6 +49,16 @@ const resolvers = {
           updatedAt: '2021-01-01',
         },
       ]
+    },
+  },
+  Mutation: {
+    createNewsArticle: async (_, { article }) => {
+      return {
+        ...article,
+        id: 1,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }
     },
   },
 }
