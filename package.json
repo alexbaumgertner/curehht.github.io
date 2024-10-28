@@ -5,10 +5,13 @@
   "version": "2.0.0",
   "author": "Alex Baumgertner <alex.baumgertner@gmail.com>",
   "dependencies": {
+    "@apollo/server": "^4.11.0",
+    "@as-integrations/next": "^3.1.0",
     "@vercel/postgres": "^0.10.0",
     "bootstrap": "^5.3.3",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.35.3",
+    "graphql-tag": "^2.12.6",
     "next": "^14.2.16",
     "next-auth": "^4.24.10",
     "react": "^18.3.1",

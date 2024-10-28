@@ -4,11 +4,11 @@ import React, { useState } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 
-interface AddNewsArticleProps {
+interface NewsArticleFormProps {
   author: string
 }
 
-const AddNewsArticle: React.FC<AddNewsArticleProps> = ({ author }) => {
+const NewsArticleForm: React.FC<NewsArticleFormProps> = ({ author }) => {
   const [title, setTitle] = useState('')
   const [text, setText] = useState('')
   const [originLink, setOriginLink] = useState('')
@@ -21,8 +21,6 @@ const AddNewsArticle: React.FC<AddNewsArticleProps> = ({ author }) => {
       originLink,
       author,
     }
-    console.log('New Article:', newArticle)
-    // Add logic to handle the new article (e.g., send to an API)
   }
 
   return (
@@ -59,4 +57,4 @@ const AddNewsArticle: React.FC<AddNewsArticleProps> = ({ author }) => {
   )
 }
 
-export { AddNewsArticle }
+export { NewsArticleForm }

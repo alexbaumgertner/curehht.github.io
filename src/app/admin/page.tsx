@@ -3,7 +3,7 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
-import { AuthPanel, AddNewsArticle } from '@/components'
+import { AuthPanel, NewsArticleForm } from '@/components'
 
 const AdminPage: React.FC = () => {
   return (
@@ -20,7 +20,7 @@ const AdminPage: React.FC = () => {
           <h2>Редактировать новости</h2>
           <section>
             <h3>Добавить новость</h3>
-            <AddNewsArticle author="" />
+            <NewsArticleForm author="" />
           </section>
 
           <section>

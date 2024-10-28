@@ -1,6 +1,6 @@
 import { Menu } from './Menu'
 import { Footer } from './Footer'
-import { AddNewsArticle } from './AddNewsArticle'
+import { NewsArticleForm } from './NewsArticleForm'
 import { AuthPanel } from './AuthPanel'
 
-export { Menu, Footer, AddNewsArticle, AuthPanel }
+export { Menu, Footer, NewsArticleForm, AuthPanel }
