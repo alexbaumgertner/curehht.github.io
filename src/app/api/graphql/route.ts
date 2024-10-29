@@ -35,7 +35,7 @@ const typeDefs = gql`
   type Mutation {
     createNewsArticle(article: NewsArticleInput): NewsArticle
     updateNewsArticle(id: Int!, article: NewsArticleInput): NewsArticle
-    deleteNewsArticle(id: Int!): Int!
+    deleteNewsArticle(id: Int!): NewsArticle
   }
 `
 
@@ -66,8 +66,11 @@ const resolvers = {
       return result[0]
     },
     deleteNewsArticle: async (_parent: unknown, { id }, { db }) => {
-      const result = await db.delete(newsArticle).where(eq(newsArticle.id, id))
-      return result
+      const result = await db
+        .delete(newsArticle)
+        .where(eq(newsArticle.id, id))
+        .returning()
+      return result[0]
     },
   },
 }
