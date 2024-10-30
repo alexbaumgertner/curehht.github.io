@@ -1,7 +1,8 @@
 'use client'
 
 import React from 'react'
-import { signIn, signOut, useSession } from 'next-auth/react'
+import Image from 'next/image'
+import { useSession, signIn, signOut } from 'next-auth/react'
 import Link from 'next/link'
 import Button from 'react-bootstrap/Button'
 
@@ -21,10 +22,12 @@ export const AuthPanel = () => {
           <p className={classes.title}>Привет, {session?.user?.name}</p>
           <div className={classes.avatarAndMenu}>
             <Link href="/profile">
-              <img
+              <Image
                 className={classes.avatar}
                 src={session?.user?.image as string}
                 alt={session?.user?.name as string}
+                width={50}
+                height={50}
               />
             </Link>
             <div className={classes.menu}>

@@ -1,23 +1,14 @@
+'use client'
+
 import React from 'react'
-import { Metadata } from 'next'
+import { SessionProvider } from 'next-auth/react'
 
-import { NextAuthProvider } from './providers'
-
-export const metadata: Metadata = {
-  title: 'Административная панель',
-  description: 'Административная панель',
-}
+// Metadata is not supported in client components. Please define it in a server component.
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  return (
-    <html lang="en">
-      <body>
-        <NextAuthProvider>{children}</NextAuthProvider>
-      </body>
-    </html>
-  )
+  return <SessionProvider>{children}</SessionProvider>
 }

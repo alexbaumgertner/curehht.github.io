@@ -20,15 +20,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body>
-        <div className="columns">
-          <div className="columns__col columns__col_left">
-            <Menu />
-          </div>
-          <div className="columns__col columns__col_right">
-            <main>{children}</main>
-          </div>
-        </div>
-
+        <main>{children}</main>
         <Footer />
       </body>
     </html>

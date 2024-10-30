@@ -5,6 +5,8 @@
   "version": "2.0.0",
   "author": "Alex Baumgertner <alex.baumgertner@gmail.com>",
   "dependencies": {
+    "@apollo/client": "^3.11.8",
+    "@apollo/experimental-nextjs-app-support": "^0.11.5",
     "@apollo/server": "^4.11.0",
     "@as-integrations/next": "^3.1.0",
     "@auth/drizzle-adapter": "^1.7.2",
@@ -14,7 +16,7 @@
     "drizzle-orm": "^0.35.3",
     "graphql-tag": "^2.12.6",
     "next": "^14.2.16",
-    "next-auth": "^4.24.10",
+    "next-auth": "^5.0.0-beta.25",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.5",
     "react-dom": "^18.3.1"
