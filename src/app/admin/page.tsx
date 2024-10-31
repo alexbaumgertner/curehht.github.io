@@ -51,8 +51,12 @@ const UPDATE_NEWS_ARTICLE = gql`
 
 const AdminPage: React.FC = () => {
   const { data } = useQuery(GET_NEWS_ARTICLES)
-  const [createNewsArticle] = useMutation(CREATE_NEWS_ARTICLE)
-  const [updateNewsArticle] = useMutation(UPDATE_NEWS_ARTICLE)
+  const [createNewsArticle] = useMutation(CREATE_NEWS_ARTICLE, {
+    refetchQueries: [{ query: GET_NEWS_ARTICLES }],
+  })
+  const [updateNewsArticle] = useMutation(UPDATE_NEWS_ARTICLE, {
+    refetchQueries: [{ query: GET_NEWS_ARTICLES }],
+  })
 
   const handleSubmitCreate = (article: any) => {
     createNewsArticle({ variables: { article } })

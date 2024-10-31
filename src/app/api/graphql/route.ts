@@ -6,6 +6,7 @@ import { gql } from 'graphql-tag'
 import { NextRequest } from 'next/server'
 
 import { newsArticle } from '@/db/schema'
+import { getUserFromRequest } from '@/utils/getUserFromRequest'
 
 const typeDefs = gql`
   scalar Date
@@ -26,7 +27,6 @@ const typeDefs = gql`
   }
 
   input NewsArticleInput {
-    author: String
     title: String!
     text: String
     origin_url: String
@@ -47,11 +47,12 @@ const resolvers = {
     },
   },
   Mutation: {
-    createNewsArticle: async (_parent: unknown, { article }, { db }) => {
+    createNewsArticle: async (_parent: unknown, { article }, { db, user }) => {
       const result = await db
         .insert(newsArticle)
         .values({
           ...article,
+          author: user.id,
         })
         .returning()
       return result[0]
@@ -82,11 +83,13 @@ const server = new ApolloServer({
 })
 
 const handler = startServerAndCreateNextHandler<NextRequest>(server, {
-  context: async (req) => {
+  context: async (req, res) => {
+    const user = await getUserFromRequest(req)
     const db = drizzle()
 
     return {
       db,
+      user,
     }
   },
 })
