@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 function IndexPage() {
   return (
     <div className="IndexPage">
@@ -49,8 +51,9 @@ function IndexPage() {
         телеангиэктазии (Википедия)
       </p>
       <p>
-        <img
+        <Image
           height={200}
+          width={299}
           src="https://upload.wikimedia.org/wikipedia/commons/2/2d/Case_115.jpg"
           alt="Телеангиэктазии на губах при наследственной геморрагической телеангиэктазии"
         />
@@ -62,8 +65,9 @@ function IndexPage() {
         из 5000 человек.
       </p>
       <p>
-        <img
+        <Image
           height={400}
+          width={234}
           src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Autosomal_dominant_-_en.svg/701px-Autosomal_dominant_-_en.svg.png?20231005223322"
           alt="аутосомно-доминантному типу"
         />
@@ -93,7 +97,7 @@ function IndexPage() {
           Для аутосомно-доминантного заболевания достаточно, чтобы одна из этих
           двух копий была изменённой, чтобы болезнь проявилась. В этом случае
           даже если другая копия гена нормальная, изменённая копия будет
-          "доминировать" и приведет к развитию болезни.
+          &quot;доминировать&quot; и приведет к развитию болезни.
         </li>
         <li>
           <strong>Вероятность передачи:</strong> Если один из родителей имеет
@@ -104,7 +108,7 @@ function IndexPage() {
         </li>
       </ol>
     </div>
-  );
+  )
 }
 
-export default IndexPage;
+export default IndexPage
