@@ -1,11 +1,12 @@
+'use client'
+
 import React from 'react'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import { gql } from '@apollo/client'
+import { gql, useQuery, useMutation } from '@apollo/client'
 
 import { AuthPanel, NewsArticleForm } from '@/components'
-import { query } from '@/components/Apollo/ServerProvider'
 
 const GET_NEWS_ARTICLES = gql`
   query GetNewsArticles {
@@ -34,8 +35,36 @@ const CREATE_NEWS_ARTICLE = gql`
   }
 `
 
-const AdminPage: React.FC = async () => {
-  const { data } = await query({ query: GET_NEWS_ARTICLES })
+const UPDATE_NEWS_ARTICLE = gql`
+  mutation UpdateNewsArticle($id: Int!, $article: NewsArticleInput) {
+    updateNewsArticle(id: $id, article: $article) {
+      id
+      title
+      author
+      text
+      origin_url
+      created_at
+      updated_at
+    }
+  }
+`
+
+const AdminPage: React.FC = () => {
+  const { data } = useQuery(GET_NEWS_ARTICLES)
+  const [createNewsArticle] = useMutation(CREATE_NEWS_ARTICLE)
+  const [updateNewsArticle] = useMutation(UPDATE_NEWS_ARTICLE)
+
+  const handleSubmitCreate = (article: any) => {
+    createNewsArticle({ variables: { article } })
+  }
+
+  const handleSubmitUpdate = (article: any) => {
+    const updatingArticle = { ...article }
+    delete updatingArticle.id
+    updateNewsArticle({
+      variables: { id: article.id, article: updatingArticle },
+    })
+  }
 
   return (
     <Container>
@@ -51,13 +80,17 @@ const AdminPage: React.FC = async () => {
           <h2>Редактировать новости</h2>
           <section>
             <h3>Добавить новость</h3>
-            <NewsArticleForm />
+            <NewsArticleForm onSubmit={handleSubmitCreate} />
           </section>
 
           <section>
             <h3>Редактировать новость</h3>
             {data?.newsArticles?.map((article) => (
-              <NewsArticleForm key={article.id} {...(article as any)} />
+              <NewsArticleForm
+                key={article.id}
+                onSubmit={handleSubmitUpdate}
+                {...(article as any)}
+              />
             ))}
           </section>
         </Col>

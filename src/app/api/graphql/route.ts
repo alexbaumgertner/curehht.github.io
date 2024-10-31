@@ -26,7 +26,7 @@ const typeDefs = gql`
   }
 
   input NewsArticleInput {
-    author: String!
+    author: String
     title: String!
     text: String
     origin_url: String
