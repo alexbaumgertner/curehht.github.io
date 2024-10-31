@@ -9,7 +9,7 @@ interface NewsArticleFormProps {
   title?: string
   text?: string
   origin_url?: string
-  onSubmit?: (article: any) => void
+  onSubmit?: (article) => void
 }
 
 const NewsArticleForm: React.FC<NewsArticleFormProps> = ({

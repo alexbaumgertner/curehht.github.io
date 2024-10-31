@@ -58,11 +58,11 @@ const AdminPage: React.FC = () => {
     refetchQueries: [{ query: GET_NEWS_ARTICLES }],
   })
 
-  const handleSubmitCreate = (article: any) => {
+  const handleSubmitCreate = (article) => {
     createNewsArticle({ variables: { article } })
   }
 
-  const handleSubmitUpdate = (article: any) => {
+  const handleSubmitUpdate = (article) => {
     const updatingArticle = { ...article }
     delete updatingArticle.id
     updateNewsArticle({
@@ -93,7 +93,7 @@ const AdminPage: React.FC = () => {
               <NewsArticleForm
                 key={article.id}
                 onSubmit={handleSubmitUpdate}
-                {...(article as any)}
+                {...article}
               />
             ))}
           </section>

@@ -76,14 +76,14 @@ const resolvers = {
   },
 }
 
-const server = new ApolloServer({
+const server = new ApolloServer<object>({
   resolvers,
   typeDefs,
   introspection: true,
 })
 
 const handler = startServerAndCreateNextHandler<NextRequest>(server, {
-  context: async (req, res) => {
+  context: async (req) => {
     const user = await getUserFromRequest(req)
     const db = drizzle()
 

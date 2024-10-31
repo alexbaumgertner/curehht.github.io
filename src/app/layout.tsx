@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { Menu, Footer } from '@/components'
+import { Footer } from '@/components'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 

@@ -37,7 +37,7 @@ export const AuthPanel = () => {
               <Button
                 className={classes.logout}
                 onClick={() => {
-                  confirm('Вы уверены, что хотите выйти?') && signOut()
+                  if (confirm('Вы уверены, что хотите выйти?')) signOut()
                 }}
               >
                 Выйти
