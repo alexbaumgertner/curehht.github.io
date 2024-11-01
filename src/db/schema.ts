@@ -7,6 +7,7 @@ import {
   timestamp,
   primaryKey,
   boolean,
+  json,
 } from 'drizzle-orm/pg-core'
 import type { AdapterAccountType } from '@auth/core/adapters'
 
@@ -99,3 +100,26 @@ export const authenticators = pgTable(
     }),
   })
 )
+
+export enum PermissionAction {
+  read = 'read',
+  create = 'create',
+  update = 'update',
+  delete = 'delete',
+}
+
+export enum Resources {
+  newsArticle = 'newsArticle',
+}
+
+export const roles = pgTable('role', {
+  name: text('name').primaryKey().unique(),
+  permissions: json('permissions')
+    .notNull()
+    .default([
+      {
+        resource: Resources.newsArticle,
+        actions: [PermissionAction.create, PermissionAction.read],
+      },
+    ]),
+})

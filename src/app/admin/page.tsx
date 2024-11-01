@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { gql, useQuery, useMutation } from '@apollo/client'
 
-import { AuthPanel, NewsArticleForm } from '@/components'
+import { AuthPanel, NewsArticleForm, RoleForm } from '@/components'
 
 const GET_NEWS_ARTICLES = gql`
   query GetNewsArticles {
@@ -70,6 +70,8 @@ const AdminPage: React.FC = () => {
     })
   }
 
+  const handleRoleCreate = (role) => {}
+
   return (
     <Container>
       <h1>Admin Page</h1>
@@ -77,6 +79,15 @@ const AdminPage: React.FC = () => {
       <Row>
         <Col>
           <AuthPanel />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <h2>Редактировать роли</h2>
+          <section>
+            <h3>Добавить роль</h3>
+            <RoleForm onSubmit={handleRoleCreate} />
+          </section>
         </Col>
       </Row>
       <Row>

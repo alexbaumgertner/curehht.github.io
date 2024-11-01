@@ -22,8 +22,36 @@ const typeDefs = gql`
     deleted_at: Date
   }
 
-  type Query {
-    newsArticles: [NewsArticle]
+  type Role {
+    _id: ID
+    name: String
+    permissions: [Permission]
+  }
+
+  type Permission {
+    actions: [Action]
+    resource: ResourceName!
+  }
+
+  enum Action {
+    create
+    read
+    update
+    delete
+  }
+
+  enum ResourceName {
+    articleNews
+  }
+
+  input RoleInput {
+    name: String
+    permissions: [PermissionInput]
+  }
+
+  input PermissionInput {
+    actions: [Action]
+    resource: ResourceName
   }
 
   input NewsArticleInput {
@@ -32,10 +60,19 @@ const typeDefs = gql`
     origin_url: String
   }
 
+  type Query {
+    newsArticles: [NewsArticle]
+    roles: [Role]
+  }
+
   type Mutation {
     createNewsArticle(article: NewsArticleInput): NewsArticle
     updateNewsArticle(id: Int!, article: NewsArticleInput): NewsArticle
     deleteNewsArticle(id: Int!): NewsArticle
+
+    createRole(role: RoleInput): Role
+    updateRole(id: ID!, role: RoleInput): Role
+    deleteRole(id: ID!): Role
   }
 `
 
