@@ -15,6 +15,13 @@
       "when": 1730228065392,
       "tag": "0001_thick_pestilence",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1730539462887,
+      "tag": "0002_married_bulldozer",
+      "breakpoints": true
     }
   ]
 }

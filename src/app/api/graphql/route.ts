@@ -22,15 +22,30 @@ const typeDefs = gql`
     deleted_at: Date
   }
 
+  input NewsArticleInput {
+    title: String!
+    text: String
+    origin_url: String
+  }
+
   type Role {
-    _id: ID
-    name: String
+    name: String!
     permissions: [Permission]
+  }
+
+  input RoleInput {
+    name: String
+    permissions: [PermissionInput]
   }
 
   type Permission {
     actions: [Action]
     resource: ResourceName!
+  }
+
+  input PermissionInput {
+    actions: [Action]
+    resource: ResourceName
   }
 
   enum Action {
@@ -42,22 +57,6 @@ const typeDefs = gql`
 
   enum ResourceName {
     articleNews
-  }
-
-  input RoleInput {
-    name: String
-    permissions: [PermissionInput]
-  }
-
-  input PermissionInput {
-    actions: [Action]
-    resource: ResourceName
-  }
-
-  input NewsArticleInput {
-    title: String!
-    text: String
-    origin_url: String
   }
 
   type Query {

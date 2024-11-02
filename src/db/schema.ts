@@ -32,6 +32,9 @@ export const users = pgTable('user', {
   email: text('email').unique(),
   emailVerified: timestamp('emailVerified', { mode: 'date' }),
   image: text('image'),
+  roleName: text('roleName').references(() => roles.name, {
+    onDelete: 'set null',
+  }),
 })
 
 export const accounts = pgTable(
@@ -113,7 +116,7 @@ export enum Resources {
 }
 
 export const roles = pgTable('role', {
-  name: text('name').primaryKey().unique(),
+  name: text('name').primaryKey(),
   permissions: json('permissions')
     .notNull()
     .default([
