@@ -49,6 +49,32 @@ const UPDATE_NEWS_ARTICLE = gql`
   }
 `
 
+const CREATE_ROLE = gql`
+  mutation CreateRole($role: RoleInput) {
+    createRole(role: $role) {
+      id
+      name
+      permissions {
+        resource
+        actions
+      }
+    }
+  }
+`
+
+const GET_ROLES = gql`
+  query GetRoles {
+    roles {
+      id
+      name
+      permissions {
+        resource
+        actions
+      }
+    }
+  }
+`
+
 const AdminPage: React.FC = () => {
   const { data } = useQuery(GET_NEWS_ARTICLES)
   const [createNewsArticle] = useMutation(CREATE_NEWS_ARTICLE, {
@@ -56,6 +82,10 @@ const AdminPage: React.FC = () => {
   })
   const [updateNewsArticle] = useMutation(UPDATE_NEWS_ARTICLE, {
     refetchQueries: [{ query: GET_NEWS_ARTICLES }],
+  })
+
+  const [createRole] = useMutation(CREATE_ROLE, {
+    refetchQueries: [{ query: GET_ROLES }],
   })
 
   const handleSubmitCreate = (article) => {
@@ -71,7 +101,7 @@ const AdminPage: React.FC = () => {
   }
 
   const handleRoleCreate = (role) => {
-    console.log('role: ', role)
+    createRole({ variables: { role } })
   }
 
   return (

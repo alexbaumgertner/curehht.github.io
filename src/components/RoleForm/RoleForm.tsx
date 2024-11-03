@@ -21,7 +21,7 @@ const RoleForm: React.FC<RoleFormProps> = ({ onSubmit }) => {
     permissions: [
       {
         resource: Resources.newsArticle,
-        actions: [PermissionAction.read],
+        actions: [PermissionAction.create, PermissionAction.read],
       },
       {
         resource: Resources.articles,

@@ -29,13 +29,12 @@ const typeDefs = gql`
   }
 
   type Role {
-    id: Int!
+    id: String!
     name: String!
     permissions: [Permission]
   }
 
   input RoleInput {
-    id: Int!
     name: String
     permissions: [PermissionInput]
   }
@@ -58,7 +57,8 @@ const typeDefs = gql`
   }
 
   enum ResourceName {
-    articleNews
+    articles
+    newsArticle
   }
 
   type Query {
@@ -72,8 +72,8 @@ const typeDefs = gql`
     deleteNewsArticle(id: Int!): NewsArticle
 
     createRole(role: RoleInput): Role
-    updateRole(id: ID!, role: RoleInput): Role
-    deleteRole(id: ID!): Role
+    updateRole(id: String!, role: RoleInput): Role
+    deleteRole(id: String!): Role
   }
 `
 
@@ -113,6 +113,14 @@ const resolvers = {
       const result = await db
         .delete(newsArticle)
         .where(eq(newsArticle.id, id))
+        .returning()
+      return result[0]
+    },
+
+    createRole: async (_parent: unknown, { role }, { db, user }) => {
+      const result = await db
+        .insert(roles)
+        .values({ ...role, owner_id: user.id })
         .returning()
       return result[0]
     },
