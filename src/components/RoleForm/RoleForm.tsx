@@ -3,31 +3,35 @@
 import React, { useState } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { PermissionAction, Resources } from '@/db/types'
 import Table from 'react-bootstrap/Table'
+
+import { PermissionAction, Resources } from '@/db/types'
 
 type RoleFormProps = {
   onSubmit: (role: {
+    id?: string
     name: string
     permissions: { resource: Resources; actions: PermissionAction[] }[]
   }) => void
+  id?: string
   name?: string
   permissions?: { resource: Resources; actions: PermissionAction[] }[]
 }
 
-const RoleForm: React.FC<RoleFormProps> = ({ onSubmit }) => {
+const RoleForm: React.FC<RoleFormProps> = ({
+  onSubmit,
+  id,
+  name,
+  permissions,
+}) => {
   const [role, setRole] = useState({
-    name: 'New role',
-    permissions: [
-      {
-        resource: Resources.newsArticle,
-        actions: [PermissionAction.read],
-      },
-      {
-        resource: Resources.articles,
-        actions: [PermissionAction.create, PermissionAction.read],
-      },
-    ],
+    name: name || '',
+    permissions:
+      permissions ||
+      Object.values(Resources).map((resource) => ({
+        resource,
+        actions: [],
+      })),
   })
 
   const handleNameChange = (
@@ -42,7 +46,7 @@ const RoleForm: React.FC<RoleFormProps> = ({ onSubmit }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    onSubmit(role)
+    onSubmit({ ...role, id })
   }
 
   const handlePermissionChange = (e) => {

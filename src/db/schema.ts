@@ -11,10 +11,12 @@ import {
 } from 'drizzle-orm/pg-core'
 import type { AdapterAccountType } from '@auth/core/adapters'
 
-import type { PermissionAction, Resources } from './types'
+import { PermissionAction, Resources } from './types'
 
 export const roles = pgTable('role', {
-  id: text('id').primaryKey(),
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   name: text('name').unique().notNull(),
   permissions: json('permissions')
     .notNull()
@@ -24,6 +26,14 @@ export const roles = pgTable('role', {
         actions: [PermissionAction.create, PermissionAction.read],
       },
     ]),
+  created_at: timestamp('created_at').defaultNow().notNull(),
+  updated_at: timestamp('updated_at')
+    .defaultNow()
+    .notNull()
+    .$onUpdateFn(() => new Date()),
+  owner_id: text('owner_id').references(() => users.id, {
+    onDelete: 'set null',
+  }),
 })
 
 export const users = pgTable('user', {
