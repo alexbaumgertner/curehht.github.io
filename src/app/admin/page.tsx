@@ -70,7 +70,9 @@ const AdminPage: React.FC = () => {
     })
   }
 
-  const handleRoleCreate = (role) => {}
+  const handleRoleCreate = (role) => {
+    console.log('role: ', role)
+  }
 
   return (
     <Container>
@@ -90,6 +92,7 @@ const AdminPage: React.FC = () => {
           </section>
         </Col>
       </Row>
+      <div style={{ marginBottom: '100px' }}></div>
       <Row>
         <Col>
           <h2>Редактировать новости</h2>

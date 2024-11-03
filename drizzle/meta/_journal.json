@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1730227230108,
-      "tag": "0000_broad_catseye",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1730228065392,
-      "tag": "0001_thick_pestilence",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1730539462887,
-      "tag": "0002_married_bulldozer",
+      "when": 1730541002198,
+      "tag": "0000_shocking_caretaker",
       "breakpoints": true
     }
   ]

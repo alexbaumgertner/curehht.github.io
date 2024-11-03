@@ -5,7 +5,7 @@ import { drizzle } from 'drizzle-orm/vercel-postgres'
 import { gql } from 'graphql-tag'
 import { NextRequest } from 'next/server'
 
-import { newsArticle } from '@/db/schema'
+import { newsArticle, roles } from '@/db/schema'
 import { getUserFromRequest } from '@/utils/getUserFromRequest'
 
 const typeDefs = gql`
@@ -29,11 +29,13 @@ const typeDefs = gql`
   }
 
   type Role {
+    id: Int!
     name: String!
     permissions: [Permission]
   }
 
   input RoleInput {
+    id: Int!
     name: String
     permissions: [PermissionInput]
   }
@@ -79,6 +81,11 @@ const resolvers = {
   Query: {
     newsArticles: async (_parent: unknown, _args, { db }) => {
       const result = await db.select().from(newsArticle)
+      return result
+    },
+
+    roles: async (_parent: unknown, _args, { db }) => {
+      const result = await db.select().from(roles)
       return result
     },
   },

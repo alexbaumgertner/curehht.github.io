@@ -11,17 +11,19 @@ import {
 } from 'drizzle-orm/pg-core'
 import type { AdapterAccountType } from '@auth/core/adapters'
 
-export const newsArticle = pgTable('news_articles', {
-  id: serial('id').primaryKey(),
-  title: varchar('title', { length: 255 }).notNull(),
-  author: varchar('author', { length: 255 }).notNull(),
-  text: text('text').notNull(),
-  origin_url: varchar('origin_url', { length: 255 }).notNull(),
-  created_at: timestamp('created_at').defaultNow().notNull(),
-  updated_at: timestamp('updated_at')
-    .defaultNow()
+import type { PermissionAction, Resources } from './types'
+
+export const roles = pgTable('role', {
+  id: text('id').primaryKey(),
+  name: text('name').unique().notNull(),
+  permissions: json('permissions')
     .notNull()
-    .$onUpdateFn(() => new Date()),
+    .default([
+      {
+        resource: Resources.newsArticle,
+        actions: [PermissionAction.create, PermissionAction.read],
+      },
+    ]),
 })
 
 export const users = pgTable('user', {
@@ -32,7 +34,7 @@ export const users = pgTable('user', {
   email: text('email').unique(),
   emailVerified: timestamp('emailVerified', { mode: 'date' }),
   image: text('image'),
-  roleName: text('roleName').references(() => roles.name, {
+  role_id: text('role_id').references(() => roles.id, {
     onDelete: 'set null',
   }),
 })
@@ -104,25 +106,15 @@ export const authenticators = pgTable(
   })
 )
 
-export enum PermissionAction {
-  read = 'read',
-  create = 'create',
-  update = 'update',
-  delete = 'delete',
-}
-
-export enum Resources {
-  newsArticle = 'newsArticle',
-}
-
-export const roles = pgTable('role', {
-  name: text('name').primaryKey(),
-  permissions: json('permissions')
+export const newsArticle = pgTable('news_articles', {
+  id: serial('id').primaryKey(),
+  title: varchar('title', { length: 255 }).notNull(),
+  author: varchar('author', { length: 255 }).notNull(),
+  text: text('text').notNull(),
+  origin_url: varchar('origin_url', { length: 255 }).notNull(),
+  created_at: timestamp('created_at').defaultNow().notNull(),
+  updated_at: timestamp('updated_at')
+    .defaultNow()
     .notNull()
-    .default([
-      {
-        resource: Resources.newsArticle,
-        actions: [PermissionAction.create, PermissionAction.read],
-      },
-    ]),
+    .$onUpdateFn(() => new Date()),
 })
