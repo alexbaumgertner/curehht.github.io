@@ -267,6 +267,7 @@ const MarkButton = ({ format, icon }) => {
 
 type RichTextProps = {
   value: Descendant[]
+  onChange: (value: Descendant[]) => void
 }
 
 const RichText = ({ value, onChange }: RichTextProps) => {
@@ -318,7 +319,7 @@ const RichText = ({ value, onChange }: RichTextProps) => {
         />
         <Button
           onClick={() => {
-            onChange(editor.children)
+            onChange(editor?.children)
           }}
         >
           Save

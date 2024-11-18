@@ -28,10 +28,10 @@ CREATE TABLE IF NOT EXISTS "authenticator" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "news_articles" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"title" varchar(255) NOT NULL,
+	"title" text NOT NULL,
 	"author" varchar(255) NOT NULL,
-	"text" text NOT NULL,
-	"origin_url" varchar(255) NOT NULL,
+	"text" json DEFAULT '[{"type":"paragraph","children":[{"text":""}]}]'::json,
+	"origin_url" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
@@ -40,6 +40,9 @@ CREATE TABLE IF NOT EXISTS "role" (
 	"id" text PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
 	"permissions" json DEFAULT '[{"resource":"newsArticle","actions":["create","read"]}]'::json NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"owner_id" text,
 	CONSTRAINT "role_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
@@ -74,6 +77,12 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "authenticator" ADD CONSTRAINT "authenticator_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "role" ADD CONSTRAINT "role_owner_id_user_id_fk" FOREIGN KEY ("owner_id") REFERENCES "public"."user"("id") ON DELETE set null ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

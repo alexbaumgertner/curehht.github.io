@@ -9,7 +9,7 @@ import { Editor } from '@/components'
 interface NewsArticleFormProps {
   id?: number
   title?: string
-  text?: string
+  text?: []
   origin_url?: string
   onSubmit?: (article) => void
 }
@@ -23,22 +23,20 @@ const NewsArticleForm: React.FC<NewsArticleFormProps> = ({
 }) => {
   const [article, setArticle] = React.useState({
     title,
-    text,
+    text: text?.length
+      ? text
+      : [
+          {
+            type: 'paragraph',
+            children: [{ text: '' }],
+          },
+        ],
     origin_url,
   })
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    const formData = new FormData(e.target as HTMLFormElement)
-    const article = {
-      id,
-      title: formData.get('title') as string,
-      text: formData.get('text') as string,
-      origin_url: formData.get('origin_url') as string,
-    }
-
     if (onSubmit) {
-      onSubmit(article)
+      onSubmit({ ...article, id })
     }
   }
 
@@ -49,6 +47,15 @@ const NewsArticleForm: React.FC<NewsArticleFormProps> = ({
       [name]: value,
     }))
   }
+
+  const handleEditorChange = (value) => {
+    setArticle((prev) => ({
+      ...prev,
+      text: value,
+    }))
+  }
+
+  console.log('article: ', article)
 
   return (
     <div>
@@ -63,7 +70,7 @@ const NewsArticleForm: React.FC<NewsArticleFormProps> = ({
       </Form.Group>
       <Form.Group controlId="text">
         <Form.Label>Text</Form.Label>
-        <Editor value={[]} onChange={handleChange} />
+        <Editor value={article.text} onChange={handleEditorChange} />
       </Form.Group>
       <Form.Group controlId="origin_url">
         <Form.Label>Origin Link</Form.Label>
@@ -74,7 +81,7 @@ const NewsArticleForm: React.FC<NewsArticleFormProps> = ({
           onChange={handleChange}
         />
       </Form.Group>
-      <Button variant="primary" type="submit">
+      <Button variant="primary" onClick={handleSubmit}>
         {id ? 'Update' : 'Create'} Article
       </Button>
     </div>

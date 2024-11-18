@@ -118,10 +118,15 @@ export const authenticators = pgTable(
 
 export const newsArticle = pgTable('news_articles', {
   id: serial('id').primaryKey(),
-  title: varchar('title', { length: 255 }).notNull(),
+  title: text('title').notNull(),
   author: varchar('author', { length: 255 }).notNull(),
-  text: text('text').notNull(),
-  origin_url: varchar('origin_url', { length: 255 }).notNull(),
+  text: json('text').default([
+    {
+      type: 'paragraph',
+      children: [{ text: '' }],
+    },
+  ]),
+  origin_url: text('origin_url').notNull(),
   created_at: timestamp('created_at').defaultNow().notNull(),
   updated_at: timestamp('updated_at')
     .defaultNow()

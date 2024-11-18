@@ -1,5 +1,5 @@
 {
-  "id": "aa6e48f6-9d7e-4447-a2e7-ac3207ba8366",
+  "id": "3752042a-c785-48be-90be-64d0593b6aa1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -204,7 +204,7 @@
         },
         "title": {
           "name": "title",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -216,13 +216,14 @@
         },
         "text": {
           "name": "text",
-          "type": "text",
+          "type": "json",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false,
+          "default": "'[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]'::json"
         },
         "origin_url": {
           "name": "origin_url",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -269,10 +270,44 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'[{\"resource\":\"newsArticle\",\"actions\":[\"create\",\"read\"]}]'::json"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "role_owner_id_user_id_fk": {
+          "name": "role_owner_id_user_id_fk",
+          "tableFrom": "role",
+          "tableTo": "user",
+          "columnsFrom": [
+            "owner_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "role_name_unique": {

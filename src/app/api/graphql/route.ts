@@ -10,13 +10,14 @@ import { getUserFromRequest } from '@/utils/getUserFromRequest'
 
 const typeDefs = gql`
   scalar Date
+  scalar JSON
 
   type NewsArticle {
     id: Int!
     title: String!
     author: String!
-    text: String!
-    origin_url: String!
+    text: JSON
+    origin_url: String
     updated_at: Date
     created_at: Date!
     deleted_at: Date
@@ -24,7 +25,7 @@ const typeDefs = gql`
 
   input NewsArticleInput {
     title: String!
-    text: String
+    text: JSON
     origin_url: String
   }
 
@@ -81,7 +82,6 @@ const resolvers = {
   Query: {
     newsArticles: async (_parent: unknown, _args, { db }) => {
       const result = await db.select().from(newsArticle)
-      console.log('result: ', result)
       return result
     },
 

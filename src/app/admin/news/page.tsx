@@ -29,6 +29,7 @@ const GET_NEWS_ARTICLES = gql`
       title
       author
       text
+      origin_url
       created_at
       updated_at
     }
