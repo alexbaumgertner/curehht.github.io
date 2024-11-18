@@ -81,6 +81,7 @@ const resolvers = {
   Query: {
     newsArticles: async (_parent: unknown, _args, { db }) => {
       const result = await db.select().from(newsArticle)
+      console.log('result: ', result)
       return result
     },
 

@@ -4,6 +4,8 @@ import React from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 
+import { Editor } from '@/components'
+
 interface NewsArticleFormProps {
   id?: number
   title?: string
@@ -49,7 +51,7 @@ const NewsArticleForm: React.FC<NewsArticleFormProps> = ({
   }
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <div>
       <Form.Group controlId="title">
         <Form.Label>Title</Form.Label>
         <Form.Control
@@ -61,13 +63,7 @@ const NewsArticleForm: React.FC<NewsArticleFormProps> = ({
       </Form.Group>
       <Form.Group controlId="text">
         <Form.Label>Text</Form.Label>
-        <Form.Control
-          as="textarea"
-          rows={3}
-          name="text"
-          value={article.text}
-          onChange={handleChange}
-        />
+        <Editor value={[]} onChange={handleChange} />
       </Form.Group>
       <Form.Group controlId="origin_url">
         <Form.Label>Origin Link</Form.Label>
@@ -81,7 +77,7 @@ const NewsArticleForm: React.FC<NewsArticleFormProps> = ({
       <Button variant="primary" type="submit">
         {id ? 'Update' : 'Create'} Article
       </Button>
-    </Form>
+    </div>
   )
 }
 

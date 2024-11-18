@@ -1,0 +1,15 @@
+.component {
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(204, 204, 204);
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.editor {
+  min-height: 200px;
+  outline: none;
+}

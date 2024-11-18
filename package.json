@@ -12,14 +12,20 @@
     "@auth/drizzle-adapter": "^1.7.2",
     "@vercel/postgres": "^0.10.0",
     "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.35.3",
     "graphql-tag": "^2.12.6",
+    "is-hotkey": "^0.2.0",
     "next": "^14.2.16",
     "next-auth": "^5.0.0-beta.25",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.5",
-    "react-dom": "^18.3.1"
+    "react-bootstrap-icons": "^1.11.4",
+    "react-dom": "^18.3.1",
+    "slate": "^0.110.2",
+    "slate-history": "^0.110.3",
+    "slate-react": "^0.111.0"
   },
   "license": "MIT",
   "scripts": {
@@ -38,6 +44,7 @@
     "url": "https://github.com/curehht/curehht.github.io/issues"
   },
   "devDependencies": {
+    "@types/is-hotkey": "^0.1.10",
     "@types/node": "^20.8.2",
     "@types/react": "^18.3.12",
     "drizzle-kit": "^0.26.2",
