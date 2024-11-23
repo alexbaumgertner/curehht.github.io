@@ -35,7 +35,9 @@ const RoleForm: React.FC<RoleFormProps> = ({
   })
 
   const handleNameChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = e.target
     setRole((prev) => ({

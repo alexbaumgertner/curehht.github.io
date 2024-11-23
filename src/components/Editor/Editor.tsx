@@ -55,6 +55,7 @@ const toggleBlock = (editor, format) => {
     match: (n) =>
       !Editor.isEditor(n) &&
       SlateElement.isElement(n) &&
+      // @ts-expect-error: Type mismatch for list types
       LIST_TYPES.includes(n.type) &&
       !TEXT_ALIGN_TYPES.includes(format),
     split: true,
@@ -62,10 +63,12 @@ const toggleBlock = (editor, format) => {
   let newProperties: Partial<SlateElement>
   if (TEXT_ALIGN_TYPES.includes(format)) {
     newProperties = {
+      // @ts-expect-error: Type mismatch for list types
       align: isActive ? undefined : format,
     }
   } else {
     newProperties = {
+      // @ts-expect-error: Type mismatch for list types
       type: isActive ? 'paragraph' : isList ? 'list-item' : format,
     }
   }
