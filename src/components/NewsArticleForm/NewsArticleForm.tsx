@@ -34,7 +34,7 @@ const NewsArticleForm: React.FC<NewsArticleFormProps> = ({
     origin_url,
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = () => {
     if (onSubmit) {
       onSubmit({ ...article, id })
     }
