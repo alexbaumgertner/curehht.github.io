@@ -7,20 +7,33 @@ import {
   timestamp,
   primaryKey,
   boolean,
+  json,
 } from 'drizzle-orm/pg-core'
 import type { AdapterAccountType } from '@auth/core/adapters'
 
-export const newsArticle = pgTable('news_articles', {
-  id: serial('id').primaryKey(),
-  title: varchar('title', { length: 255 }).notNull(),
-  author: varchar('author', { length: 255 }).notNull(),
-  text: text('text').notNull(),
-  origin_url: varchar('origin_url', { length: 255 }).notNull(),
+import { PermissionAction, Resources } from './types'
+
+export const roles = pgTable('role', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text('name').unique().notNull(),
+  permissions: json('permissions')
+    .notNull()
+    .default([
+      {
+        resource: Resources.newsArticle,
+        actions: [PermissionAction.create, PermissionAction.read],
+      },
+    ]),
   created_at: timestamp('created_at').defaultNow().notNull(),
   updated_at: timestamp('updated_at')
     .defaultNow()
     .notNull()
     .$onUpdateFn(() => new Date()),
+  owner_id: text('owner_id').references(() => users.id, {
+    onDelete: 'set null',
+  }),
 })
 
 export const users = pgTable('user', {
@@ -31,6 +44,9 @@ export const users = pgTable('user', {
   email: text('email').unique(),
   emailVerified: timestamp('emailVerified', { mode: 'date' }),
   image: text('image'),
+  role_id: text('role_id').references(() => roles.id, {
+    onDelete: 'set null',
+  }),
 })
 
 export const accounts = pgTable(
@@ -99,3 +115,21 @@ export const authenticators = pgTable(
     }),
   })
 )
+
+export const newsArticle = pgTable('news_articles', {
+  id: serial('id').primaryKey(),
+  title: text('title').notNull(),
+  author: varchar('author', { length: 255 }).notNull(),
+  text: json('text').default([
+    {
+      type: 'paragraph',
+      children: [{ text: '' }],
+    },
+  ]),
+  origin_url: text('origin_url').notNull(),
+  created_at: timestamp('created_at').defaultNow().notNull(),
+  updated_at: timestamp('updated_at')
+    .defaultNow()
+    .notNull()
+    .$onUpdateFn(() => new Date()),
+})

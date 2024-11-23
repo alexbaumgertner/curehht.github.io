@@ -5,37 +5,77 @@ import { drizzle } from 'drizzle-orm/vercel-postgres'
 import { gql } from 'graphql-tag'
 import { NextRequest } from 'next/server'
 
-import { newsArticle } from '@/db/schema'
+import { newsArticle, roles } from '@/db/schema'
 import { getUserFromRequest } from '@/utils/getUserFromRequest'
 
 const typeDefs = gql`
   scalar Date
+  scalar JSON
 
   type NewsArticle {
     id: Int!
     title: String!
     author: String!
-    text: String!
-    origin_url: String!
+    text: JSON
+    origin_url: String
     updated_at: Date
     created_at: Date!
     deleted_at: Date
   }
 
-  type Query {
-    newsArticles: [NewsArticle]
-  }
-
   input NewsArticleInput {
     title: String!
-    text: String
+    text: JSON
     origin_url: String
+  }
+
+  type Role {
+    id: String!
+    name: String!
+    permissions: [Permission]
+  }
+
+  input RoleInput {
+    name: String
+    permissions: [PermissionInput]
+  }
+
+  type Permission {
+    actions: [Action]
+    resource: ResourceName!
+  }
+
+  input PermissionInput {
+    actions: [Action]
+    resource: ResourceName
+  }
+
+  enum Action {
+    create
+    read
+    update
+    delete
+  }
+
+  enum ResourceName {
+    articles
+    newsArticle
+  }
+
+  type Query {
+    newsArticles: [NewsArticle]
+    newsArticle(id: Int!): NewsArticle
+    roles: [Role]
   }
 
   type Mutation {
     createNewsArticle(article: NewsArticleInput): NewsArticle
     updateNewsArticle(id: Int!, article: NewsArticleInput): NewsArticle
     deleteNewsArticle(id: Int!): NewsArticle
+
+    createRole(role: RoleInput): Role
+    updateRole(id: String!, role: RoleInput): Role
+    deleteRole(id: String!): Role
   }
 `
 
@@ -43,6 +83,18 @@ const resolvers = {
   Query: {
     newsArticles: async (_parent: unknown, _args, { db }) => {
       const result = await db.select().from(newsArticle)
+      return result
+    },
+    newsArticle: async (_parent: unknown, { id }, { db }) => {
+      const result = await db
+        .select()
+        .from(newsArticle)
+        .where(eq(newsArticle.id, id))
+      return result[0]
+    },
+
+    roles: async (_parent: unknown, _args, { db }) => {
+      const result = await db.select().from(roles)
       return result
     },
   },
@@ -70,6 +122,22 @@ const resolvers = {
       const result = await db
         .delete(newsArticle)
         .where(eq(newsArticle.id, id))
+        .returning()
+      return result[0]
+    },
+
+    createRole: async (_parent: unknown, { role }, { db, user }) => {
+      const result = await db
+        .insert(roles)
+        .values({ ...role, owner_id: user.id })
+        .returning()
+      return result[0]
+    },
+    updateRole: async (_parent: unknown, { id, role }, { db }) => {
+      const result = await db
+        .update(roles)
+        .set(role)
+        .where(eq(roles.id, id))
         .returning()
       return result[0]
     },
