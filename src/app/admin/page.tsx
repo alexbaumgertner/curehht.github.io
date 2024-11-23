@@ -131,7 +131,7 @@ const AdminPage: React.FC = () => {
   }
 
   return (
-    <Container>
+    <Container fluid>
       <h1>Admin Page</h1>
 
       <Row>

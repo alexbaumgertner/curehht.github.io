@@ -72,7 +72,7 @@ const EditNewsArticlePage = ({ params: { id } }: EditNewsArticlePageProps) => {
   if (error) return <p>Error: {error.message}</p>
 
   return (
-    <Container>
+    <Container fluid>
       <h1>Edit News Article</h1>
       <Row>
         <Col>

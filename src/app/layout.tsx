@@ -1,16 +1,11 @@
-import { Metadata } from 'next'
+'use client'
+
+import { SessionProvider } from 'next-auth/react'
+
+import { ClientProvider } from '@/components/Apollo'
 import { Footer } from '@/components'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
-
-export const metadata: Metadata = {
-  icons: '/favicon.ico',
-  title: 'HHT (Рандю-Ослева-Вебера) болезнь',
-  keywords:
-    'Болезнь Рандю́ — О́слера (Рандю — Ослера — Ве́бера), синдром Ослера, семейная наследственная телеангиэктазия наследственная геморрагическая телеангиэктазия, геморрагический ангиоматоз',
-  description:
-    'семейная наследственная телеангиэктазия наследственная геморрагическая телеангиэктазия',
-}
 
 export default function RootLayout({
   children,
@@ -20,7 +15,9 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body>
-        <main>{children}</main>
+        <SessionProvider>
+          <ClientProvider>{children}</ClientProvider>
+        </SessionProvider>
         <Footer />
       </body>
     </html>

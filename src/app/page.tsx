@@ -1,7 +1,9 @@
-import gql from 'graphql-tag'
-import { Row, Col } from 'react-bootstrap'
+'use client'
 
-import { getClient } from '@/components/Apollo/ServerProvider'
+import Link from 'next/link'
+import { Container, Row, Col } from 'react-bootstrap'
+
+import { gql, useQuery } from '@apollo/client'
 
 const GET_NEWS_ARTICLES = gql`
   query GetNewsArticles {
@@ -16,30 +18,30 @@ const GET_NEWS_ARTICLES = gql`
   }
 `
 
-async function IndexPage() {
-  const client = getClient()
-  const { data } = await client.query({
-    query: GET_NEWS_ARTICLES,
-  })
+function IndexPage() {
+  const { data, loading, error } = useQuery(GET_NEWS_ARTICLES)
+
+  console.log('loading: ', loading)
+  console.log('error: ', error)
+  console.log('data: ', data)
 
   return (
     <div className="IndexPage">
-      <Row>
-        <Col>
-          <h1>News Articles</h1>
-          <ul>
-            {data.newsArticles.map((article) => (
-              <li key={article.id}>
-                <h2>{article.title}</h2>
-                <p>{article.text}</p>
-                <p>Author: {article.author}</p>
-                <p>Created at: {article.created_at}</p>
-                <p>Updated at: {article.updated_at}</p>
-              </li>
-            ))}
-          </ul>
-        </Col>
-      </Row>
+      <Container fluid>
+        <Row>
+          <Col>
+            <h2>Новости</h2>
+            <ul>
+              {!loading &&
+                data?.newsArticles?.map((article) => (
+                  <li key={article.id}>
+                    <Link href={`/news/${article.id}`}>{article.title}</Link>
+                  </li>
+                ))}
+            </ul>
+          </Col>
+        </Row>
+      </Container>
     </div>
   )
 }

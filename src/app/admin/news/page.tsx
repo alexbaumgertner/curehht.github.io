@@ -37,26 +37,9 @@ const GET_NEWS_ARTICLES = gql`
   }
 `
 
-const UPDATE_NEWS_ARTICLE = gql`
-  mutation UpdateNewsArticle($id: Int!, $article: NewsArticleInput) {
-    updateNewsArticle(id: $id, article: $article) {
-      id
-      title
-      author
-      text
-      origin_url
-      created_at
-      updated_at
-    }
-  }
-`
-
 const AdminNewsPage: React.FC = () => {
   const { data } = useQuery(GET_NEWS_ARTICLES)
   const [createNewsArticle] = useMutation(CREATE_NEWS_ARTICLE, {
-    refetchQueries: [{ query: GET_NEWS_ARTICLES }],
-  })
-  const [updateNewsArticle] = useMutation(UPDATE_NEWS_ARTICLE, {
     refetchQueries: [{ query: GET_NEWS_ARTICLES }],
   })
 
@@ -64,16 +47,8 @@ const AdminNewsPage: React.FC = () => {
     createNewsArticle({ variables: { article } })
   }
 
-  const handleSubmitUpdate = (article) => {
-    const updatingArticle = { ...article }
-    delete updatingArticle.id
-    updateNewsArticle({
-      variables: { id: article.id, article: updatingArticle },
-    })
-  }
-
   return (
-    <Container>
+    <Container fluid>
       <h1>Admin Page</h1>
 
       <Row>

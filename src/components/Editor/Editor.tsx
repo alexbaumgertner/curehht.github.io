@@ -267,10 +267,11 @@ const MarkButton = ({ format, icon }) => {
 
 type RichTextProps = {
   value: Descendant[]
-  onChange: (value: Descendant[]) => void
+  onChange?: (value: Descendant[]) => void
+  readOnly?: boolean
 }
 
-const RichText = ({ value, onChange }: RichTextProps) => {
+const RichText = ({ value, onChange, readOnly }: RichTextProps) => {
   const renderElement = useCallback((props) => <Element {...props} />, [])
   const renderLeaf = useCallback((props) => <Leaf {...props} />, [])
   const editor = useMemo(() => withHistory(withReact(createEditor())), [])
@@ -278,27 +279,29 @@ const RichText = ({ value, onChange }: RichTextProps) => {
   return (
     <div className={classes.component}>
       <Slate editor={editor} initialValue={value}>
-        <ButtonGroup className={classes.controls}>
-          <MarkButton format="bold" icon={Icon.format_bold} />
-          <MarkButton format="italic" icon={Icon.format_italic} />
-          <MarkButton format="underline" icon={Icon.format_underlined} />
-          <MarkButton format="code" icon={Icon.code} />
-          <BlockButton format="heading-one" icon={Icon.looks_one} />
-          <BlockButton format="heading-two" icon={Icon.looks_two} />
-          <BlockButton format="block-quote" icon={Icon.format_quote} />
-          <BlockButton
-            format="numbered-list"
-            icon={Icon.format_list_numbered}
-          />
-          <BlockButton
-            format="bulleted-list"
-            icon={Icon.format_list_bulleted}
-          />
-          <BlockButton format="left" icon={Icon.format_align_left} />
-          <BlockButton format="center" icon={Icon.format_align_center} />
-          <BlockButton format="right" icon={Icon.format_align_right} />
-          <BlockButton format="justify" icon={Icon.format_align_justify} />
-        </ButtonGroup>
+        {!readOnly && (
+          <ButtonGroup className={classes.controls}>
+            <MarkButton format="bold" icon={Icon.format_bold} />
+            <MarkButton format="italic" icon={Icon.format_italic} />
+            <MarkButton format="underline" icon={Icon.format_underlined} />
+            <MarkButton format="code" icon={Icon.code} />
+            <BlockButton format="heading-one" icon={Icon.looks_one} />
+            <BlockButton format="heading-two" icon={Icon.looks_two} />
+            <BlockButton format="block-quote" icon={Icon.format_quote} />
+            <BlockButton
+              format="numbered-list"
+              icon={Icon.format_list_numbered}
+            />
+            <BlockButton
+              format="bulleted-list"
+              icon={Icon.format_list_bulleted}
+            />
+            <BlockButton format="left" icon={Icon.format_align_left} />
+            <BlockButton format="center" icon={Icon.format_align_center} />
+            <BlockButton format="right" icon={Icon.format_align_right} />
+            <BlockButton format="justify" icon={Icon.format_align_justify} />
+          </ButtonGroup>
+        )}
         <Editable
           className={classes.editor}
           disableDefaultStyles
@@ -307,6 +310,7 @@ const RichText = ({ value, onChange }: RichTextProps) => {
           placeholder="Enter some rich text…"
           spellCheck
           autoFocus
+          readOnly={readOnly}
           onKeyDown={(event) => {
             for (const hotkey in HOTKEYS) {
               if (isHotkey(hotkey, event)) {
@@ -317,13 +321,15 @@ const RichText = ({ value, onChange }: RichTextProps) => {
             }
           }}
         />
-        <Button
-          onClick={() => {
-            onChange(editor?.children)
-          }}
-        >
-          Save Text
-        </Button>
+        {!readOnly && (
+          <Button
+            onClick={() => {
+              onChange?.(editor?.children)
+            }}
+          >
+            Save Text
+          </Button>
+        )}
       </Slate>
     </div>
   )
