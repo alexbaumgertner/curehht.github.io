@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import Link from 'next/link'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -91,11 +92,9 @@ const AdminNewsPage: React.FC = () => {
           <section>
             <h3>Редактировать</h3>
             {data?.newsArticles?.map((article) => (
-              <NewsArticleForm
-                key={article.id}
-                onSubmit={handleSubmitUpdate}
-                {...article}
-              />
+              <Link key={article.id} href={`/admin/news/${article.id}`}>
+                {article.title}
+              </Link>
             ))}
           </section>
         </Col>

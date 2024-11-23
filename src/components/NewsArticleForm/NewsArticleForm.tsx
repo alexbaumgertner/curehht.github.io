@@ -55,8 +55,6 @@ const NewsArticleForm: React.FC<NewsArticleFormProps> = ({
     }))
   }
 
-  console.log('article: ', article)
-
   return (
     <div>
       <Form.Group controlId="title">

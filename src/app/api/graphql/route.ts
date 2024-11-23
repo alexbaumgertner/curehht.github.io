@@ -64,6 +64,7 @@ const typeDefs = gql`
 
   type Query {
     newsArticles: [NewsArticle]
+    newsArticle(id: Int!): NewsArticle
     roles: [Role]
   }
 
@@ -83,6 +84,13 @@ const resolvers = {
     newsArticles: async (_parent: unknown, _args, { db }) => {
       const result = await db.select().from(newsArticle)
       return result
+    },
+    newsArticle: async (_parent: unknown, { id }, { db }) => {
+      const result = await db
+        .select()
+        .from(newsArticle)
+        .where(eq(newsArticle.id, id))
+      return result[0]
     },
 
     roles: async (_parent: unknown, _args, { db }) => {

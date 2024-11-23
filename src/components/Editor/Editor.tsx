@@ -322,7 +322,7 @@ const RichText = ({ value, onChange }: RichTextProps) => {
             onChange(editor?.children)
           }}
         >
-          Save
+          Save Text
         </Button>
       </Slate>
     </div>
