@@ -6,7 +6,7 @@ import { gql } from 'graphql-tag'
 import { NextRequest } from 'next/server'
 
 import { newsArticle, roles, users } from '@/db/schema'
-import { getUserFromRequest } from '@/utils/getUserFromRequest'
+import { getUserDataFromRequest } from '@/utils/getUserFromRequest'
 
 const typeDefs = gql`
   scalar Date
@@ -178,10 +178,8 @@ const server = new ApolloServer<object>({
 
 const handler = startServerAndCreateNextHandler<NextRequest>(server, {
   context: async (req) => {
-    const user = await getUserFromRequest(req)
+    const user = await getUserDataFromRequest(req)
     const db = drizzle()
-
-    console.log('user: ', user)
 
     return {
       db,
