@@ -6,49 +6,8 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { gql, useQuery, useMutation } from '@apollo/client'
 
-import { AuthPanel, NewsArticleForm, RoleForm } from '@/components'
+import { AuthPanel, RoleForm } from '@/components'
 import { cleanVariables } from '@/utils/cleanVariables'
-
-const CREATE_NEWS_ARTICLE = gql`
-  mutation CreateNewsArticle($article: NewsArticleInput) {
-    createNewsArticle(article: $article) {
-      id
-      title
-      author
-      text
-      origin_url
-      created_at
-      updated_at
-    }
-  }
-`
-
-const GET_NEWS_ARTICLES = gql`
-  query GetNewsArticles {
-    newsArticles {
-      id
-      title
-      author
-      text
-      created_at
-      updated_at
-    }
-  }
-`
-
-const UPDATE_NEWS_ARTICLE = gql`
-  mutation UpdateNewsArticle($id: Int!, $article: NewsArticleInput) {
-    updateNewsArticle(id: $id, article: $article) {
-      id
-      title
-      author
-      text
-      origin_url
-      created_at
-      updated_at
-    }
-  }
-`
 
 const CREATE_ROLE = gql`
   mutation CreateRole($role: RoleInput) {
@@ -89,15 +48,29 @@ const UPDATE_ROLE = gql`
   }
 `
 
-const AdminPage: React.FC = () => {
-  const { data } = useQuery(GET_NEWS_ARTICLES)
-  const [createNewsArticle] = useMutation(CREATE_NEWS_ARTICLE, {
-    refetchQueries: [{ query: GET_NEWS_ARTICLES }],
-  })
-  const [updateNewsArticle] = useMutation(UPDATE_NEWS_ARTICLE, {
-    refetchQueries: [{ query: GET_NEWS_ARTICLES }],
-  })
+const GET_USERS = gql`
+  query GetUsers {
+    users {
+      id
+      name
+      email
+      role_id
+    }
+  }
+`
 
+const UPDATE_USER_ROLE = gql`
+  mutation UpdateUserRole($userId: String!, $roleId: String!) {
+    updateUserRole(userId: $userId, roleId: $roleId) {
+      id
+      name
+      email
+      role_id
+    }
+  }
+`
+
+const AdminPage: React.FC = () => {
   const { data: rolesData } = useQuery(GET_ROLES)
   const [createRole] = useMutation(CREATE_ROLE, {
     refetchQueries: [{ query: GET_ROLES }],
@@ -106,17 +79,11 @@ const AdminPage: React.FC = () => {
     refetchQueries: [{ query: GET_ROLES }],
   })
 
-  const handleSubmitCreate = (article) => {
-    createNewsArticle({ variables: { article } })
-  }
+  const { data: usersData } = useQuery(GET_USERS)
 
-  const handleSubmitUpdate = (article) => {
-    const updatingArticle = { ...article }
-    delete updatingArticle.id
-    updateNewsArticle({
-      variables: { id: article.id, article: updatingArticle },
-    })
-  }
+  const [updateUserRole] = useMutation(UPDATE_USER_ROLE, {
+    refetchQueries: [{ query: GET_USERS }, { query: GET_ROLES }],
+  })
 
   const handleRoleCreate = (role) => {
     createRole({ variables: { role } })
@@ -130,13 +97,47 @@ const AdminPage: React.FC = () => {
     })
   }
 
+  const handleUserRoleChange = (userId, roleId) => {
+    updateUserRole({ variables: { userId, roleId } })
+  }
+
   return (
     <Container fluid>
       <h1>Admin Page</h1>
 
       <Row>
-        <Col>
+        <Col align="right">
           <AuthPanel />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <h3>Присвоить роль пользователю</h3>
+          <ul>
+            {usersData?.users?.map((user) => (
+              <li key={user.id}>
+                {user.name} ({user.email})
+                <ol>
+                  {rolesData?.roles?.map((role) => (
+                    <li key={role.id}>
+                      <label>
+                        <input
+                          type="radio"
+                          name={`user-${user.id}-role`}
+                          value={role.id}
+                          checked={user.role_id === role.id}
+                          onChange={() =>
+                            handleUserRoleChange(user.id, role.id)
+                          }
+                        />{' '}
+                        {role.name}
+                      </label>
+                    </li>
+                  ))}
+                </ol>
+              </li>
+            ))}
+          </ul>
         </Col>
       </Row>
       <Row>
@@ -153,26 +154,6 @@ const AdminPage: React.FC = () => {
             <h3>Редактировать роли</h3>
             {rolesData?.roles?.map((role) => (
               <RoleForm key={role.id} onSubmit={handleRoleUpdate} {...role} />
-            ))}
-          </section>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <h2>Редактировать новости</h2>
-          <section>
-            <h3>Добавить</h3>
-            <NewsArticleForm onSubmit={handleSubmitCreate} />
-          </section>
-
-          <section>
-            <h3>Редактировать</h3>
-            {data?.newsArticles?.map((article) => (
-              <NewsArticleForm
-                key={article.id}
-                onSubmit={handleSubmitUpdate}
-                {...article}
-              />
             ))}
           </section>
         </Col>

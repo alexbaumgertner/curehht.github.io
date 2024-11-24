@@ -5,7 +5,7 @@ import { drizzle } from 'drizzle-orm/vercel-postgres'
 import { gql } from 'graphql-tag'
 import { NextRequest } from 'next/server'
 
-import { newsArticle, roles } from '@/db/schema'
+import { newsArticle, roles, users } from '@/db/schema'
 import { getUserFromRequest } from '@/utils/getUserFromRequest'
 
 const typeDefs = gql`
@@ -62,10 +62,20 @@ const typeDefs = gql`
     newsArticle
   }
 
+  type User {
+    id: String!
+    name: String
+    email: String
+    role_id: String
+  }
+
   type Query {
     newsArticles: [NewsArticle]
     newsArticle(id: Int!): NewsArticle
+
     roles: [Role]
+
+    users: [User]
   }
 
   type Mutation {
@@ -76,6 +86,8 @@ const typeDefs = gql`
     createRole(role: RoleInput): Role
     updateRole(id: String!, role: RoleInput): Role
     deleteRole(id: String!): Role
+
+    updateUserRole(userId: String!, roleId: String!): User
   }
 `
 
@@ -95,6 +107,11 @@ const resolvers = {
 
     roles: async (_parent: unknown, _args, { db }) => {
       const result = await db.select().from(roles)
+      return result
+    },
+
+    users: async (_parent: unknown, _args, { db }) => {
+      const result = await db.select().from(users)
       return result
     },
   },
@@ -141,6 +158,15 @@ const resolvers = {
         .returning()
       return result[0]
     },
+
+    updateUserRole: async (_parent: unknown, { userId, roleId }, { db }) => {
+      const result = await db
+        .update(users)
+        .set({ role_id: roleId })
+        .where(eq(users.id, userId))
+        .returning()
+      return result[0]
+    },
   },
 }
 
@@ -154,6 +180,8 @@ const handler = startServerAndCreateNextHandler<NextRequest>(server, {
   context: async (req) => {
     const user = await getUserFromRequest(req)
     const db = drizzle()
+
+    console.log('user: ', user)
 
     return {
       db,

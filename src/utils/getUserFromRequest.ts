@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server'
 import { drizzle } from 'drizzle-orm/vercel-postgres'
 import { eq } from 'drizzle-orm'
 
-import { sessions, users } from '@/db/schema'
+import { sessions, users, roles } from '@/db/schema'
 
 import { getSessionTokenName } from './getSessionTokenName'
 
