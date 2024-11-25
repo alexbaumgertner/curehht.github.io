@@ -6,7 +6,9 @@ import { gql } from 'graphql-tag'
 import { NextRequest } from 'next/server'
 
 import { newsArticle, roles, users } from '@/db/schema'
+import { Resources, PermissionAction } from '@/db/types'
 import { getUserDataFromRequest } from '@/utils/getUserFromRequest'
+import { isAuthorized } from '@/utils/isAuthorized'
 
 const typeDefs = gql`
   scalar Date
@@ -60,6 +62,7 @@ const typeDefs = gql`
   enum ResourceName {
     articles
     newsArticle
+    roles
   }
 
   type User {
@@ -105,7 +108,16 @@ const resolvers = {
       return result[0]
     },
 
-    roles: async (_parent: unknown, _args, { db }) => {
+    roles: async (_parent: unknown, _args, { db, userData }) => {
+      if (
+        !isAuthorized({
+          userData,
+          resourceName: Resources.roles,
+          action: PermissionAction.read,
+        })
+      ) {
+        throw new Error('Unauthorized')
+      }
       const result = await db.select().from(roles)
       return result
     },
@@ -116,12 +128,16 @@ const resolvers = {
     },
   },
   Mutation: {
-    createNewsArticle: async (_parent: unknown, { article }, { db, user }) => {
+    createNewsArticle: async (
+      _parent: unknown,
+      { article },
+      { db, userData }
+    ) => {
       const result = await db
         .insert(newsArticle)
         .values({
           ...article,
-          author: user.id,
+          author: userData.id,
         })
         .returning()
       return result[0]
@@ -143,10 +159,10 @@ const resolvers = {
       return result[0]
     },
 
-    createRole: async (_parent: unknown, { role }, { db, user }) => {
+    createRole: async (_parent: unknown, { role }, { db, userData }) => {
       const result = await db
         .insert(roles)
-        .values({ ...role, owner_id: user.id })
+        .values({ ...role, owner_id: userData.id })
         .returning()
       return result[0]
     },
@@ -178,12 +194,12 @@ const server = new ApolloServer<object>({
 
 const handler = startServerAndCreateNextHandler<NextRequest>(server, {
   context: async (req) => {
-    const user = await getUserDataFromRequest(req)
+    const userData = await getUserDataFromRequest(req)
     const db = drizzle()
 
     return {
       db,
-      user,
+      userData,
     }
   },
 })

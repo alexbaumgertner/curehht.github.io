@@ -4,10 +4,12 @@ import React from 'react'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Accordion from 'react-bootstrap/Accordion'
 import { gql, useQuery, useMutation } from '@apollo/client'
 
 import { AuthPanel, RoleForm } from '@/components'
 import { cleanVariables } from '@/utils/cleanVariables'
+import { Button } from 'react-bootstrap'
 
 const CREATE_ROLE = gql`
   mutation CreateRole($role: RoleInput) {
@@ -101,6 +103,10 @@ const AdminPage: React.FC = () => {
     updateUserRole({ variables: { userId, roleId } })
   }
 
+  const handleRoleDelete = (role) => {
+    // todo
+  }
+
   return (
     <Container fluid>
       <h1>Admin Page</h1>
@@ -152,9 +158,22 @@ const AdminPage: React.FC = () => {
         <Col>
           <section>
             <h3>Редактировать роли</h3>
-            {rolesData?.roles?.map((role) => (
-              <RoleForm key={role.id} onSubmit={handleRoleUpdate} {...role} />
-            ))}
+            <Accordion>
+              {rolesData?.roles?.map((role) => (
+                <Accordion.Item eventKey={role.id} key={role.id}>
+                  <Accordion.Header>{role.name}</Accordion.Header>
+                  <Accordion.Body>
+                    <RoleForm onSubmit={handleRoleUpdate} {...role} />
+                    {/* <Button
+                      variant="danger"
+                      onClick={() => handleRoleDelete(role)}
+                    >
+                      Delete
+                    </Button> */}
+                  </Accordion.Body>
+                </Accordion.Item>
+              ))}
+            </Accordion>
           </section>
         </Col>
       </Row>
