@@ -5,8 +5,10 @@ import { drizzle } from 'drizzle-orm/vercel-postgres'
 import { gql } from 'graphql-tag'
 import { NextRequest } from 'next/server'
 
-import { newsArticle, roles } from '@/db/schema'
-import { getUserFromRequest } from '@/utils/getUserFromRequest'
+import { newsArticle, roles, users } from '@/db/schema'
+import { Resources, PermissionAction } from '@/db/types'
+import { getUserDataFromRequest } from '@/utils/getUserFromRequest'
+import { isAuthorized } from '@/utils/isAuthorized'
 
 const typeDefs = gql`
   scalar Date
@@ -60,12 +62,23 @@ const typeDefs = gql`
   enum ResourceName {
     articles
     newsArticle
+    roles
+  }
+
+  type User {
+    id: String!
+    name: String
+    email: String
+    role_id: String
   }
 
   type Query {
     newsArticles: [NewsArticle]
     newsArticle(id: Int!): NewsArticle
+
     roles: [Role]
+
+    users: [User]
   }
 
   type Mutation {
@@ -76,6 +89,8 @@ const typeDefs = gql`
     createRole(role: RoleInput): Role
     updateRole(id: String!, role: RoleInput): Role
     deleteRole(id: String!): Role
+
+    updateUserRole(userId: String!, roleId: String!): User
   }
 `
 
@@ -93,18 +108,36 @@ const resolvers = {
       return result[0]
     },
 
-    roles: async (_parent: unknown, _args, { db }) => {
+    roles: async (_parent: unknown, _args, { db, userData }) => {
+      if (
+        !isAuthorized({
+          userData,
+          resourceName: Resources.roles,
+          action: PermissionAction.read,
+        })
+      ) {
+        throw new Error('Unauthorized')
+      }
       const result = await db.select().from(roles)
+      return result
+    },
+
+    users: async (_parent: unknown, _args, { db }) => {
+      const result = await db.select().from(users)
       return result
     },
   },
   Mutation: {
-    createNewsArticle: async (_parent: unknown, { article }, { db, user }) => {
+    createNewsArticle: async (
+      _parent: unknown,
+      { article },
+      { db, userData }
+    ) => {
       const result = await db
         .insert(newsArticle)
         .values({
           ...article,
-          author: user.id,
+          author: userData.id,
         })
         .returning()
       return result[0]
@@ -126,10 +159,10 @@ const resolvers = {
       return result[0]
     },
 
-    createRole: async (_parent: unknown, { role }, { db, user }) => {
+    createRole: async (_parent: unknown, { role }, { db, userData }) => {
       const result = await db
         .insert(roles)
-        .values({ ...role, owner_id: user.id })
+        .values({ ...role, owner_id: userData.id })
         .returning()
       return result[0]
     },
@@ -138,6 +171,15 @@ const resolvers = {
         .update(roles)
         .set(role)
         .where(eq(roles.id, id))
+        .returning()
+      return result[0]
+    },
+
+    updateUserRole: async (_parent: unknown, { userId, roleId }, { db }) => {
+      const result = await db
+        .update(users)
+        .set({ role_id: roleId })
+        .where(eq(users.id, userId))
         .returning()
       return result[0]
     },
@@ -152,12 +194,12 @@ const server = new ApolloServer<object>({
 
 const handler = startServerAndCreateNextHandler<NextRequest>(server, {
   context: async (req) => {
-    const user = await getUserFromRequest(req)
+    const userData = await getUserDataFromRequest(req)
     const db = drizzle()
 
     return {
       db,
-      user,
+      userData,
     }
   },
 })
