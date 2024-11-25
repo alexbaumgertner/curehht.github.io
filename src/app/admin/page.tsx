@@ -9,7 +9,7 @@ import { gql, useQuery, useMutation } from '@apollo/client'
 
 import { AuthPanel, RoleForm } from '@/components'
 import { cleanVariables } from '@/utils/cleanVariables'
-import { Button } from 'react-bootstrap'
+// import { Button } from 'react-bootstrap'
 
 const CREATE_ROLE = gql`
   mutation CreateRole($role: RoleInput) {
@@ -103,9 +103,9 @@ const AdminPage: React.FC = () => {
     updateUserRole({ variables: { userId, roleId } })
   }
 
-  const handleRoleDelete = (role) => {
-    // todo
-  }
+  // const handleRoleDelete = (role) => {
+  //   // todo
+  // }
 
   return (
     <Container fluid>
