@@ -276,6 +276,7 @@ type RichTextProps = {
 
 const defaultValue: Descendant[] = [
   {
+    // @ts-expect-error Slate editor type mismatch
     type: 'paragraph',
     children: [{ text: '' }],
   },
