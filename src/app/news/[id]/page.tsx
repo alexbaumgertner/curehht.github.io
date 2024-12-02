@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Container from 'react-bootstrap/Container'
+import Spinner from 'react-bootstrap/Spinner'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { gql, useQuery } from '@apollo/client'
@@ -14,6 +15,7 @@ const GET_NEWS_ARTICLE = gql`
       id
       title
       author
+      summary
       text
       origin_url
       created_at
@@ -33,10 +35,10 @@ const NewsArticlePage = ({ params: { id } }: NewsArticlePageProps) => {
     variables: { id: parseInt(id, 10) },
   })
 
-  if (loading) return <p>Loading...</p>
+  if (loading) return <Spinner animation="border" />
   if (error) return <p>Error: {error.message}</p>
 
-  const { title, author, text, origin_url, created_at, updated_at } =
+  const { title, author, summary, text, origin_url, created_at, updated_at } =
     data?.newsArticle
 
   return (
@@ -53,6 +55,7 @@ const NewsArticlePage = ({ params: { id } }: NewsArticlePageProps) => {
               Source: <a href={origin_url}>{origin_url}</a>
             </p>
           )}
+          <div>{summary && <p>{summary}</p>}</div>
           <p>Created at: {new Date(created_at).toLocaleString()}</p>
           {updated_at && (
             <p>Updated at: {new Date(updated_at).toLocaleString()}</p>

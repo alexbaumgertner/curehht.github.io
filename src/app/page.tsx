@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { Container, Row, Col } from 'react-bootstrap'
+import Spinner from 'react-bootstrap/Spinner'
 
 import { gql, useQuery } from '@apollo/client'
 
@@ -31,6 +32,7 @@ function IndexPage() {
         <Row>
           <Col>
             <h2>Новости</h2>
+            {loading && <Spinner animation="border" />}
             <ul>
               {!loading &&
                 data?.newsArticles?.map((article) => (

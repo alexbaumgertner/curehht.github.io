@@ -9,6 +9,7 @@ import { Editor } from '@/components'
 interface NewsArticleFormProps {
   id?: number
   title?: string
+  summary?: string
   text?: []
   origin_url?: string
   onSubmit?: (article) => void
@@ -17,6 +18,7 @@ interface NewsArticleFormProps {
 const NewsArticleForm: React.FC<NewsArticleFormProps> = ({
   id,
   title,
+  summary,
   text,
   origin_url,
   onSubmit,
@@ -63,6 +65,15 @@ const NewsArticleForm: React.FC<NewsArticleFormProps> = ({
           type="text"
           name="title"
           value={article.title}
+          onChange={handleChange}
+        />
+      </Form.Group>
+      <Form.Group controlId="summary">
+        <Form.Label>Summary</Form.Label>
+        <Form.Control
+          as="textarea"
+          name="summary"
+          value={article.summary}
           onChange={handleChange}
         />
       </Form.Group>

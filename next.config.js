@@ -3,7 +3,16 @@
  */
 const nextConfig = {
   images: {
-    domains: ['upload.wikimedia.org', 'avatars.yandex.net'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
+      },
+      {
+        protocol: 'https',
+        hostname: 'avatars.yandex.net',
+      },
+    ],
   },
 }
 
