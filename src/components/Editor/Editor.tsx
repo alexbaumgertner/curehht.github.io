@@ -274,14 +274,26 @@ type RichTextProps = {
   readOnly?: boolean
 }
 
-const RichText = ({ value, onChange, readOnly }: RichTextProps) => {
+const defaultValue: Descendant[] = [
+  {
+    // @ts-expect-error Slate editor type mismatch
+    type: 'paragraph',
+    children: [{ text: '' }],
+  },
+]
+
+const RichText = ({
+  value = defaultValue,
+  onChange,
+  readOnly,
+}: RichTextProps) => {
   const renderElement = useCallback((props) => <Element {...props} />, [])
   const renderLeaf = useCallback((props) => <Leaf {...props} />, [])
   const editor = useMemo(() => withHistory(withReact(createEditor())), [])
 
   return (
     <div className={classes.component}>
-      <Slate editor={editor} initialValue={value}>
+      <Slate editor={editor} initialValue={value} onValueChange={onChange}>
         {!readOnly && (
           <ButtonGroup className={classes.controls}>
             <MarkButton format="bold" icon={Icon.format_bold} />
@@ -317,6 +329,7 @@ const RichText = ({ value, onChange, readOnly }: RichTextProps) => {
           onKeyDown={(event) => {
             for (const hotkey in HOTKEYS) {
               if (isHotkey(hotkey, event)) {
+                console.log('event: ', event)
                 event.preventDefault()
                 const mark = HOTKEYS[hotkey]
                 toggleMark(editor, mark)
@@ -324,15 +337,6 @@ const RichText = ({ value, onChange, readOnly }: RichTextProps) => {
             }
           }}
         />
-        {!readOnly && (
-          <Button
-            onClick={() => {
-              onChange?.(editor?.children)
-            }}
-          >
-            Save Text
-          </Button>
-        )}
       </Slate>
     </div>
   )

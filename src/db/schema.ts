@@ -9,8 +9,8 @@ import {
   boolean,
   json,
 } from 'drizzle-orm/pg-core'
-import type { AdapterAccountType } from '@auth/core/adapters'
 
+import type { AdapterAccountType } from '@auth/core/adapters'
 import { PermissionAction, Resources } from './types'
 
 export const roles = pgTable('role', {
@@ -120,6 +120,7 @@ export const newsArticle = pgTable('news_articles', {
   id: serial('id').primaryKey(),
   title: text('title').notNull(),
   author: varchar('author', { length: 255 }).notNull(),
+  summary: text('summary'),
   text: json('text').default([
     {
       type: 'paragraph',

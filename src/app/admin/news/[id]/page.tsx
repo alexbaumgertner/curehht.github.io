@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Container from 'react-bootstrap/Container'
+import Spinner from 'react-bootstrap/Spinner'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { gql, useQuery, useMutation } from '@apollo/client'
@@ -15,6 +16,7 @@ const GET_NEWS_ARTICLE = gql`
       title
       author
       text
+      summary
       origin_url
       created_at
       updated_at
@@ -28,6 +30,7 @@ const UPDATE_NEWS_ARTICLE = gql`
       id
       title
       author
+      summary
       text
       origin_url
       created_at
@@ -68,7 +71,7 @@ const EditNewsArticlePage = ({ params: { id } }: EditNewsArticlePageProps) => {
     })
   }
 
-  if (loading) return <p>Loading...</p>
+  if (loading) return <Spinner animation="border" />
   if (error) return <p>Error: {error.message}</p>
 
   return (

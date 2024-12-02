@@ -18,6 +18,7 @@ const typeDefs = gql`
     id: Int!
     title: String!
     author: String!
+    summary: String
     text: JSON
     origin_url: String
     updated_at: Date
@@ -27,6 +28,7 @@ const typeDefs = gql`
 
   input NewsArticleInput {
     title: String!
+    summary: String
     text: JSON
     origin_url: String
   }
@@ -109,6 +111,7 @@ const resolvers = {
     },
 
     roles: async (_parent: unknown, _args, { db, userData }) => {
+      console.log('userData: ', userData)
       if (
         !isAuthorized({
           userData,
@@ -160,6 +163,9 @@ const resolvers = {
     },
 
     createRole: async (_parent: unknown, { role }, { db, userData }) => {
+      console.log('role: ', role)
+      console.log('userData: ', userData)
+
       const result = await db
         .insert(roles)
         .values({ ...role, owner_id: userData.id })

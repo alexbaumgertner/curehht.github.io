@@ -2,11 +2,12 @@
 
 import React from 'react'
 import Container from 'react-bootstrap/Container'
+import Spinner from 'react-bootstrap/Spinner'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { gql, useQuery } from '@apollo/client'
 
-import { Editor } from '@/components'
+//import { Editor } from '@/components'
 
 const GET_NEWS_ARTICLE = gql`
   query GetNewsArticle($id: Int!) {
@@ -14,6 +15,7 @@ const GET_NEWS_ARTICLE = gql`
       id
       title
       author
+      summary
       text
       origin_url
       created_at
@@ -33,11 +35,17 @@ const NewsArticlePage = ({ params: { id } }: NewsArticlePageProps) => {
     variables: { id: parseInt(id, 10) },
   })
 
-  if (loading) return <p>Loading...</p>
+  if (loading) return <Spinner animation="border" />
   if (error) return <p>Error: {error.message}</p>
 
-  const { title, author, text, origin_url, created_at, updated_at } =
-    data?.newsArticle
+  const {
+    title,
+    author,
+    summary,
+    /* text */ origin_url,
+    created_at,
+    updated_at,
+  } = data?.newsArticle
 
   return (
     <Container fluid>
@@ -45,9 +53,10 @@ const NewsArticlePage = ({ params: { id } }: NewsArticlePageProps) => {
         <Col>
           <h1>{title}</h1>
           <p>By {author}</p>
-          <div>
+          <div>{summary && <p>{summary}</p>}</div>
+          {/* <div>
             <Editor value={text} readOnly />
-          </div>
+          </div> */}
           {origin_url && (
             <p>
               Source: <a href={origin_url}>{origin_url}</a>
