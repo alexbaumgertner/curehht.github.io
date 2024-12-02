@@ -16,6 +16,7 @@ const GET_NEWS_ARTICLE = gql`
       title
       author
       text
+      summary
       origin_url
       created_at
       updated_at
@@ -29,6 +30,7 @@ const UPDATE_NEWS_ARTICLE = gql`
       id
       title
       author
+      summary
       text
       origin_url
       created_at
