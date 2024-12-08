@@ -28,18 +28,22 @@ function NewsListPage() {
   console.log('data?.newsArticles: ', data?.newsArticles)
 
   return (
-    <Container fluid>
+    <Container>
       <Row>
         <Col>
-          <h2>News</h2>
+          <h2>Новости</h2>
           <ul>
             {data?.newsArticles?.map((article) => (
               <li key={article.id}>
                 <Link href={`/news/${article.id}`}>{article.title}</Link>
-                <p>
-                  Updated at:{' '}
-                  {new Date(article.updated_at).toLocaleDateString()}
-                </p>
+                <time dateTime={new Date(article.updated_at).toLocaleString()}>
+                  {' '}
+                  [
+                  {new Intl.DateTimeFormat().format(
+                    new Date(article.updated_at)
+                  )}
+                  ]
+                </time>
                 <p>{article.summary}</p>
               </li>
             ))}

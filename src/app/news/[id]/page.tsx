@@ -7,16 +7,12 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { gql, useQuery } from '@apollo/client'
 
-//import { Editor } from '@/components'
-
 const GET_NEWS_ARTICLE = gql`
   query GetNewsArticle($id: Int!) {
     newsArticle(id: $id) {
       id
       title
-      author
       summary
-      text
       origin_url
       created_at
       updated_at
@@ -38,36 +34,37 @@ const NewsArticlePage = ({ params: { id } }: NewsArticlePageProps) => {
   if (loading) return <Spinner animation="border" />
   if (error) return <p>Error: {error.message}</p>
 
-  const {
-    title,
-    author,
-    summary,
-    /* text */ origin_url,
-    created_at,
-    updated_at,
-  } = data?.newsArticle
+  const { title, summary, origin_url, created_at, updated_at } =
+    data?.newsArticle
 
   return (
-    <Container fluid>
-      <Row>
-        <Col>
-          <h1>{title}</h1>
-          <p>By {author}</p>
-          <div>{summary && <p>{summary}</p>}</div>
-          {/* <div>
-            <Editor value={text} readOnly />
-          </div> */}
-          {origin_url && (
-            <p>
-              Source: <a href={origin_url}>{origin_url}</a>
-            </p>
-          )}
-          <p>Created at: {new Date(created_at).toLocaleString()}</p>
-          {updated_at && (
-            <p>Updated at: {new Date(updated_at).toLocaleString()}</p>
-          )}
-        </Col>
-      </Row>
+    <Container as="article">
+      <header>
+        <h1>{title}</h1>
+        <p>
+          <time dateTime={new Date(created_at).toLocaleString()}>
+            added {new Intl.DateTimeFormat().format(new Date(created_at))}
+          </time>
+        </p>
+        <p>
+          <time dateTime={new Date(updated_at).toLocaleString()}>
+            updated {new Intl.DateTimeFormat().format(new Date(updated_at))}
+          </time>
+        </p>
+      </header>
+
+      <section>
+        <Row>
+          <Col>
+            <div>{summary && <p>{summary}</p>}</div>
+            {origin_url && (
+              <p>
+                Source: <a href={origin_url}>{origin_url}</a>
+              </p>
+            )}
+          </Col>
+        </Row>
+      </section>
     </Container>
   )
 }

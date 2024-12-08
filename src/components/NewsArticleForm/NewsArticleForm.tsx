@@ -2,9 +2,9 @@
 
 import React from 'react'
 import Form from 'react-bootstrap/Form'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
-
-// import { Editor } from '@/components'
 
 interface NewsArticleFormProps {
   id?: number
@@ -44,52 +44,60 @@ const NewsArticleForm: React.FC<NewsArticleFormProps> = ({
     }))
   }
 
-  // const handleEditorChange = (value) => {
-  //   console.log('value: ', value)
-  //   setArticle((prev) => ({
-  //     ...prev,
-  //     text: value,
-  //   }))
-  // }
-
   return (
-    <div>
-      <Form.Group controlId="title">
-        <Form.Label>Title</Form.Label>
-        <Form.Control
-          type="text"
-          name="title"
-          value={article.title || ''}
-          onChange={handleChange}
-        />
+    <article>
+      <Form.Group as={Row} className="mb-3" controlId="title">
+        <Form.Label column sm={2}>
+          Название
+        </Form.Label>
+        <Col sm={10}>
+          <Form.Control
+            type="text"
+            name="title"
+            value={article.title || ''}
+            onChange={handleChange}
+          />
+        </Col>
       </Form.Group>
-      <Form.Group controlId="summary">
-        <Form.Label>Summary</Form.Label>
-        <Form.Control
-          as="textarea"
-          name="summary"
-          value={article.summary || ''}
-          onChange={handleChange}
-        />
+      <Form.Group as={Row} className="mb-3" controlId="summary">
+        <Form.Label column sm={2}>
+          Текст
+        </Form.Label>
+        <Col sm={10}>
+          <Form.Control
+            as="textarea"
+            name="summary"
+            rows={10}
+            value={article.summary || ''}
+            onChange={handleChange}
+          />
+        </Col>
       </Form.Group>
-      {/* <Editor value={text} onChange={handleEditorChange} /> */}
-      <Form.Group controlId="origin_url">
-        <Form.Label>Origin Link</Form.Label>
-        <Form.Control
-          type="text"
-          name="origin_url"
-          value={article.origin_url || ''}
-          onChange={handleChange}
-        />
+      <Form.Group as={Row} className="mb-3" controlId="origin_url">
+        <Form.Label column sm={2}>
+          Ссылка на новость
+        </Form.Label>
+        <Col sm={10}>
+          <Form.Control
+            type="text"
+            name="origin_url"
+            value={article.origin_url || ''}
+            onChange={handleChange}
+          />
+        </Col>
       </Form.Group>
-      <Button
-        variant="primary"
-        style={{ margin: '1em 0 0 0' }}
-        onClick={handleSubmit}
-      >
-        {id ? 'Update' : 'Create'} Article
-      </Button>
-    </div>
+      <Form.Group as={Row} className="mb-3">
+        <Col sm={{ span: 10, offset: 2 }}>
+          <Button
+            variant="primary"
+            style={{ margin: '1em 0 0 0' }}
+            onClick={handleSubmit}
+          >
+            {id ? 'Сохранить' : 'Создать'}
+          </Button>
+        </Col>
+      </Form.Group>
+    </article>
   )
 }
 

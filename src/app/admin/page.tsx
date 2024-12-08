@@ -4,9 +4,8 @@ import React from 'react'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Link from 'next/link'
 import { gql, useQuery, useMutation } from '@apollo/client'
-
-import { AuthPanel } from '@/components'
 
 const GET_ROLES = gql`
   query GetRoles {
@@ -56,17 +55,20 @@ const AdminPage: React.FC = () => {
   }
 
   return (
-    <Container fluid>
-      <h1>Admin Page</h1>
-
+    <Container>
+      <h1>Админка</h1>
       <Row>
-        <Col align="right">
-          <AuthPanel />
+        <Col>
+          <Link href="/admin/news">Новости</Link>
         </Col>
       </Row>
       <Row>
         <Col>
-          <h3>Присвоить роль пользователю</h3>
+          <Link href="/admin/roles">Роли</Link>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
           <ul>
             {usersData?.users?.map((user) => (
               <li key={user.id}>

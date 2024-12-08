@@ -1,10 +1,7 @@
 'use client'
 
 import React from 'react'
-import Container from 'react-bootstrap/Container'
 import Spinner from 'react-bootstrap/Spinner'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 import { gql, useQuery, useMutation } from '@apollo/client'
 
 import { NewsArticleForm } from '@/components'
@@ -75,19 +72,11 @@ const EditNewsArticlePage = ({ params: { id } }: EditNewsArticlePageProps) => {
   if (error) return <p>Error: {error.message}</p>
 
   return (
-    <Container fluid>
-      <h1>Edit News Article</h1>
-      <Row>
-        <Col>
-          <section>
-            <h3>Edit</h3>
-            {data?.newsArticle && (
-              <NewsArticleForm onSubmit={handleSubmit} {...data.newsArticle} />
-            )}
-          </section>
-        </Col>
-      </Row>
-    </Container>
+    <section>
+      {data?.newsArticle && (
+        <NewsArticleForm onSubmit={handleSubmit} {...data.newsArticle} />
+      )}
+    </section>
   )
 }
 
