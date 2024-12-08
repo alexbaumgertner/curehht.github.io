@@ -1,10 +1,7 @@
 'use client'
 
 import React from 'react'
-import Container from 'react-bootstrap/Container'
 import Spinner from 'react-bootstrap/Spinner'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 import { gql, useQuery, useMutation } from '@apollo/client'
 
 import { NewsArticleForm } from '@/components'
