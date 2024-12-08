@@ -7,7 +7,7 @@ import Col from 'react-bootstrap/Col'
 import Accordion from 'react-bootstrap/Accordion'
 import { gql, useQuery, useMutation } from '@apollo/client'
 
-import { AuthPanel, RoleForm } from '@/components'
+import { RoleForm } from '@/components'
 import { cleanVariables } from '@/utils/cleanVariables'
 
 const CREATE_ROLE = gql`
