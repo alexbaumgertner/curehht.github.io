@@ -28,7 +28,7 @@ function IndexPage() {
 
   return (
     <div className="IndexPage">
-      <Container fluid>
+      <Container>
         <Row>
           <Col>
             <h2>Новости</h2>

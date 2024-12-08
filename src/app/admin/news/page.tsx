@@ -7,7 +7,8 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { gql, useQuery, useMutation } from '@apollo/client'
 
-import { AuthPanel, NewsArticleForm } from '@/components'
+import { NewsArticleForm } from '@/components'
+import { ListGroup } from 'react-bootstrap'
 
 const CREATE_NEWS_ARTICLE = gql`
   mutation CreateNewsArticle($article: NewsArticleInput) {
@@ -49,16 +50,8 @@ const AdminNewsPage: React.FC = () => {
 
   return (
     <Container fluid>
-      <h1>Admin Page</h1>
-
       <Row>
         <Col>
-          <AuthPanel />
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <h2>Редактировать новости</h2>
           <section>
             <h3>Добавить</h3>
             <NewsArticleForm onSubmit={handleSubmitCreate} />
@@ -66,11 +59,15 @@ const AdminNewsPage: React.FC = () => {
 
           <section>
             <h3>Редактировать</h3>
-            {data?.newsArticles?.map((article) => (
-              <Link key={article.id} href={`/admin/news/${article.id}`}>
-                {article.title}
-              </Link>
-            ))}
+            <ListGroup>
+              {data?.newsArticles?.map((article) => (
+                <ListGroup.Item key={article.id}>
+                  <Link href={`/admin/news/${article.id}`}>
+                    {article.title}
+                  </Link>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
           </section>
         </Col>
       </Row>

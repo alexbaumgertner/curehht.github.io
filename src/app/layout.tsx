@@ -18,7 +18,9 @@ export default function RootLayout({
         <SessionProvider>
           <ClientProvider>{children}</ClientProvider>
         </SessionProvider>
-        <Footer />
+        <div className="mt-5">
+          <Footer />
+        </div>
       </body>
     </html>
   )

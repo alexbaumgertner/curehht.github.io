@@ -75,19 +75,11 @@ const EditNewsArticlePage = ({ params: { id } }: EditNewsArticlePageProps) => {
   if (error) return <p>Error: {error.message}</p>
 
   return (
-    <Container fluid>
-      <h1>Edit News Article</h1>
-      <Row>
-        <Col>
-          <section>
-            <h3>Edit</h3>
-            {data?.newsArticle && (
-              <NewsArticleForm onSubmit={handleSubmit} {...data.newsArticle} />
-            )}
-          </section>
-        </Col>
-      </Row>
-    </Container>
+    <section>
+      {data?.newsArticle && (
+        <NewsArticleForm onSubmit={handleSubmit} {...data.newsArticle} />
+      )}
+    </section>
   )
 }
 

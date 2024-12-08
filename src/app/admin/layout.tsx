@@ -6,6 +6,8 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 
 import { ClientProvider } from '@/components/Apollo'
+import { AuthPanel } from '@/components'
+import { Container, Row, Col } from 'react-bootstrap'
 
 // Metadata is not supported in client components. Please define it in a server component.
 
@@ -24,6 +26,14 @@ export default function AdminLayout({
 
   return (
     <SessionProvider>
+      <Container>
+        <Row>
+          <Col align="right">
+            <AuthPanel />
+          </Col>
+        </Row>
+      </Container>
+
       <ClientProvider>{children}</ClientProvider>
     </SessionProvider>
   )

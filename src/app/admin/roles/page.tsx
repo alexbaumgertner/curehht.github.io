@@ -71,14 +71,7 @@ const AdminRolePage: React.FC = () => {
   }
 
   return (
-    <Container fluid>
-      <h1>Admin Page</h1>
-
-      <Row>
-        <Col align="right">
-          <AuthPanel />
-        </Col>
-      </Row>
+    <Container>
       <Row>
         <Col>
           <section>
