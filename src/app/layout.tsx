@@ -2,6 +2,7 @@
 
 import { SessionProvider } from 'next-auth/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import { Analytics } from '@vercel/analytics/next'
 
 import { ClientProvider } from '@/components/Apollo'
 import { Footer } from '@/components'
@@ -47,6 +48,7 @@ export default function RootLayout({
                 <ClientProvider>
                   {children}
                   <SpeedInsights />
+                  <Analytics />
                 </ClientProvider>
               </Col>
             </Row>
