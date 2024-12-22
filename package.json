@@ -37,7 +37,7 @@
     "build": "next build",
     "export": "next export",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint --fix"
   },
   "repository": {
     "type": "git",
