@@ -1,3 +1,5 @@
+
+
 /**
  * @type {import('next').NextConfig}
  */
@@ -11,6 +13,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'avatars.yandex.net',
+      },
+      {
+        protocol: 'https',
+        hostname: 'zlgokxtwk5h4usda.public.blob.vercel-storage.com',
       },
     ],
   },
