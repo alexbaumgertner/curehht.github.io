@@ -8,6 +8,13 @@
       "when": 1732962954450,
       "tag": "0000_init",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1735341362081,
+      "tag": "0001_spooky_gargoyle",
+      "breakpoints": true
     }
   ]
 }
