@@ -1,14 +1,13 @@
 export enum PermissionAction {
-  read = 'read',
   create = 'create',
+  read = 'read',
   update = 'update',
   delete = 'delete',
 }
 
 export enum Resources {
   newsArticle = 'newsArticle',
-  articles = 'articles',
-  roles = 'roles',
+  page = 'page',
 }
 
 export interface Permission {

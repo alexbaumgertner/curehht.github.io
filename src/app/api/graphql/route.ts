@@ -5,7 +5,7 @@ import { drizzle } from 'drizzle-orm/vercel-postgres'
 import { gql } from 'graphql-tag'
 import { NextRequest } from 'next/server'
 
-import { newsArticle, roles, users } from '@/db/schema'
+import { newsArticle, pages, roles, users } from '@/db/schema'
 import { Resources, PermissionAction } from '@/db/types'
 import { getUserDataFromRequest } from '@/utils/getUserFromRequest'
 import { isAuthorized } from '@/utils/isAuthorized'
@@ -74,6 +74,24 @@ const typeDefs = gql`
     role_id: String
   }
 
+  type Page {
+    id: String!
+    slug: String!
+    title: String!
+    author_id: String
+    summary: String
+    content: String
+    created_at: Date
+    updated_at: Date
+  }
+
+  input PageInput {
+    slug: String!
+    title: String!
+    summary: String
+    content: String
+  }
+
   type Query {
     newsArticles: [NewsArticle]
     newsArticle(id: Int!): NewsArticle
@@ -81,6 +99,9 @@ const typeDefs = gql`
     roles: [Role]
 
     users: [User]
+
+    pages: [Page]
+    page(id: String!): Page
   }
 
   type Mutation {
@@ -93,6 +114,10 @@ const typeDefs = gql`
     deleteRole(id: String!): Role
 
     updateUserRole(userId: String!, roleId: String!): User
+
+    createPage(page: PageInput): Page
+    updatePage(id: String!, page: PageInput): Page
+    deletePage(id: String!): Page
   }
 `
 
@@ -128,6 +153,16 @@ const resolvers = {
     users: async (_parent: unknown, _args, { db }) => {
       const result = await db.select().from(users)
       return result
+    },
+
+    pages: async (_parent: unknown, _args, { db }) => {
+      const result = await db.select().from(pages)
+      return result
+    },
+
+    page: async (_parent: unknown, { id }, { db }) => {
+      const result = await db.select().from(pages).where(eq(pages.id, id))
+      return result[0]
     },
   },
   Mutation: {
@@ -187,6 +222,26 @@ const resolvers = {
         .set({ role_id: roleId })
         .where(eq(users.id, userId))
         .returning()
+      return result[0]
+    },
+
+    createPage: async (_parent: unknown, { page }, { db, userData }) => {
+      const result = await db
+        .insert(pages)
+        .values({ ...page, author_id: userData.id })
+        .returning()
+      return result[0]
+    },
+    updatePage: async (_parent: unknown, { id, page }, { db }) => {
+      const result = await db
+        .update(pages)
+        .set(page)
+        .where(eq(pages.id, id))
+        .returning()
+      return result[0]
+    },
+    deletePage: async (_parent: unknown, { id }, { db }) => {
+      const result = await db.delete(pages).where(eq(pages.id, id)).returning()
       return result[0]
     },
   },
