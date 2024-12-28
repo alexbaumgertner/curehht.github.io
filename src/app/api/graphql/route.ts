@@ -101,7 +101,8 @@ const typeDefs = gql`
     users: [User]
 
     pages: [Page]
-    page(id: String!): Page
+    page(slug: String!): Page
+    pageById(id: String!): Page
   }
 
   type Mutation {
@@ -160,7 +161,11 @@ const resolvers = {
       return result
     },
 
-    page: async (_parent: unknown, { id }, { db }) => {
+    page: async (_parent: unknown, { slug }, { db }) => {
+      const result = await db.select().from(pages).where(eq(pages.slug, slug))
+      return result[0]
+    },
+    pageById: async (_parent: unknown, { id }, { db }) => {
       const result = await db.select().from(pages).where(eq(pages.id, id))
       return result[0]
     },

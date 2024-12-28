@@ -59,6 +59,11 @@ const AdminPage: React.FC = () => {
       <h1>Админка</h1>
       <Row>
         <Col>
+          <Link href="/admin/pages">Страницы</Link>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
           <Link href="/admin/news">Новости</Link>
         </Col>
       </Row>
