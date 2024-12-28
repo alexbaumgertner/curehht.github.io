@@ -37,7 +37,8 @@
     "build": "next build",
     "export": "next export",
     "start": "next start",
-    "lint": "next lint --fix"
+    "lint": "next lint --fix",
+    "drizzle-studio": "drizzle-kit studio"
   },
   "repository": {
     "type": "git",
