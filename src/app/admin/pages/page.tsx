@@ -1,8 +1,8 @@
 'use client'
 
-import { useQuery } from "@apollo/client"
-import gql from "graphql-tag"
-import Link from "next/link"
+import { useQuery } from '@apollo/client'
+import gql from 'graphql-tag'
+import Link from 'next/link'
 
 const GET_PAGES = gql`
   query GetPages {
@@ -25,12 +25,16 @@ export default function AdminPages() {
       <h2>Pages</h2>
       {loading && <p>Loading...</p>}
       {error && <p>Error: {error.message}</p>}
-      {data &&
-        data.pages.map((page) => (
-          <div key={page.id}>
-            <Link href={`/admin/pages/${page.id}`}>{page.title}</Link>
-          </div>
-        ))}
+      <Link href="/admin/pages/new">Create Page</Link>
+      {data && (
+        <ul>
+          {data.pages.map((page) => (
+            <li key={page.id}>
+              <Link href={`/admin/pages/${page.id}`}>{page.title}</Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   )
 }
