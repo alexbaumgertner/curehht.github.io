@@ -8,6 +8,7 @@ export enum PermissionAction {
 export enum Resources {
   newsArticle = 'newsArticle',
   page = 'page',
+  roles = 'roles',
 }
 
 export interface Permission {

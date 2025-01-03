@@ -137,7 +137,6 @@ const resolvers = {
     },
 
     roles: async (_parent: unknown, _args, { db, userData }) => {
-      console.log('userData: ', userData)
       if (
         !isAuthorized({
           userData,
@@ -176,6 +175,16 @@ const resolvers = {
       { article },
       { db, userData }
     ) => {
+      if (
+        !isAuthorized({
+          userData,
+          resourceName: Resources.newsArticle,
+          action: PermissionAction.create,
+        })
+      ) {
+        throw new Error('Unauthorized')
+      }
+
       const result = await db
         .insert(newsArticle)
         .values({
@@ -185,7 +194,22 @@ const resolvers = {
         .returning()
       return result[0]
     },
-    updateNewsArticle: async (_parent: unknown, { id, article }, { db }) => {
+    updateNewsArticle: async (
+      _parent: unknown,
+      { id, article },
+      { db, userData }
+    ) => {
+      if (
+        !isAuthorized({
+          userData,
+          resourceName: Resources.newsArticle,
+          resourceAuthorId: article.author,
+          action: PermissionAction.update,
+        })
+      ) {
+        throw new Error('Unauthorized')
+      }
+
       const result = await db
         .update(newsArticle)
         .set(article)
@@ -194,7 +218,17 @@ const resolvers = {
 
       return result[0]
     },
-    deleteNewsArticle: async (_parent: unknown, { id }, { db }) => {
+    deleteNewsArticle: async (_parent: unknown, { id }, { db, userData }) => {
+      if (
+        !isAuthorized({
+          userData,
+          resourceName: Resources.newsArticle,
+          resourceAuthorId: id,
+          action: PermissionAction.delete,
+        })
+      ) {
+        throw new Error('Unauthorized')
+      }
       const result = await db
         .delete(newsArticle)
         .where(eq(newsArticle.id, id))
@@ -203,16 +237,31 @@ const resolvers = {
     },
 
     createRole: async (_parent: unknown, { role }, { db, userData }) => {
-      console.log('role: ', role)
-      console.log('userData: ', userData)
-
+      if (
+        !isAuthorized({
+          userData,
+          resourceName: Resources.roles,
+          action: PermissionAction.create,
+        })
+      ) {
+        throw new Error('Unauthorized')
+      }
       const result = await db
         .insert(roles)
         .values({ ...role, owner_id: userData.id })
         .returning()
       return result[0]
     },
-    updateRole: async (_parent: unknown, { id, role }, { db }) => {
+    updateRole: async (_parent: unknown, { id, role }, { db, userData }) => {
+      if (
+        !isAuthorized({
+          userData,
+          resourceName: Resources.roles,
+          action: PermissionAction.update,
+        })
+      ) {
+        throw new Error('Unauthorized')
+      }
       const result = await db
         .update(roles)
         .set(role)
@@ -221,7 +270,20 @@ const resolvers = {
       return result[0]
     },
 
-    updateUserRole: async (_parent: unknown, { userId, roleId }, { db }) => {
+    updateUserRole: async (
+      _parent: unknown,
+      { userId, roleId },
+      { db, userData }
+    ) => {
+      if (
+        !isAuthorized({
+          userData,
+          resourceName: Resources.roles,
+          action: PermissionAction.update,
+        })
+      ) {
+        throw new Error('Unauthorized')
+      }
       const result = await db
         .update(users)
         .set({ role_id: roleId })
@@ -231,13 +293,31 @@ const resolvers = {
     },
 
     createPage: async (_parent: unknown, { page }, { db, userData }) => {
+      if (
+        !isAuthorized({
+          userData,
+          resourceName: Resources.page,
+          action: PermissionAction.create,
+        })
+      ) {
+        throw new Error('Unauthorized')
+      }
       const result = await db
         .insert(pages)
         .values({ ...page, author_id: userData.id })
         .returning()
       return result[0]
     },
-    updatePage: async (_parent: unknown, { id, page }, { db }) => {
+    updatePage: async (_parent: unknown, { id, page }, { db, userData }) => {
+      if (
+        !isAuthorized({
+          userData,
+          resourceName: Resources.page,
+          action: PermissionAction.update,
+        })
+      ) {
+        throw new Error('Unauthorized')
+      }
       const result = await db
         .update(pages)
         .set(page)
@@ -245,7 +325,16 @@ const resolvers = {
         .returning()
       return result[0]
     },
-    deletePage: async (_parent: unknown, { id }, { db }) => {
+    deletePage: async (_parent: unknown, { id }, { db, userData }) => {
+      if (
+        !isAuthorized({
+          userData,
+          resourceName: Resources.page,
+          action: PermissionAction.delete,
+        })
+      ) {
+        throw new Error('Unauthorized')
+      }
       const result = await db.delete(pages).where(eq(pages.id, id)).returning()
       return result[0]
     },
