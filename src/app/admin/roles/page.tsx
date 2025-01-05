@@ -65,6 +65,7 @@ const AdminRolePage: React.FC = () => {
   const handleRoleUpdate = (role) => {
     const updatingRole = { ...role }
     delete updatingRole.id
+
     updateRole({
       variables: { id: role.id, role: cleanVariables(updatingRole) },
     })
@@ -90,12 +91,6 @@ const AdminRolePage: React.FC = () => {
                   <Accordion.Header>{role.name}</Accordion.Header>
                   <Accordion.Body>
                     <RoleForm onSubmit={handleRoleUpdate} {...role} />
-                    {/* <Button
-                      variant="danger"
-                      onClick={() => handleRoleDelete(role)}
-                    >
-                      Delete
-                    </Button> */}
                   </Accordion.Body>
                 </Accordion.Item>
               ))}

@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+import { gql } from '@apollo/client'
 import { SessionProvider } from 'next-auth/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Analytics } from '@vercel/analytics/next'
@@ -8,9 +10,21 @@ import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
 import { ClientProvider } from '@/components/Apollo'
+import { makeClient } from '@/components/Apollo/ClientProvider'
 import { Footer } from '@/components'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
+
+const client = makeClient()
+
+const GET_PAGES_SLUG = gql`
+  query GetPagesSlug {
+    pages {
+      slug
+      slug_name
+    }
+  }
+`
 
 export default function RootLayout({
   children,
@@ -18,6 +32,16 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   const pathname = usePathname()
+  const [data, setData] = useState(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await client.query({ query: GET_PAGES_SLUG })
+      setData(data)
+    }
+
+    fetchData()
+  }, [])
 
   return (
     <html lang="ru">
@@ -72,6 +96,13 @@ export default function RootLayout({
                       <Nav.Link>Новости</Nav.Link>
                     </Link>
                   </Nav.Item>
+                  {data?.pages.map((page) => (
+                    <Nav.Item key={page.slug}>
+                      <Link href={`/${page.slug}`} passHref legacyBehavior>
+                        <Nav.Link>{page.slug_name}</Nav.Link>
+                      </Link>
+                    </Nav.Item>
+                  ))}
                 </Nav>
               </Col>
               <Col md={10}>

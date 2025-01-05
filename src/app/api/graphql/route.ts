@@ -65,6 +65,7 @@ const typeDefs = gql`
     articles
     newsArticle
     roles
+    page
   }
 
   type User {
@@ -77,6 +78,7 @@ const typeDefs = gql`
   type Page {
     id: String!
     slug: String!
+    slug_name: String!
     title: String!
     author_id: String
     summary: String
@@ -87,6 +89,7 @@ const typeDefs = gql`
 
   input PageInput {
     slug: String!
+    slug_name: String!
     title: String!
     summary: String
     content: String
@@ -253,15 +256,16 @@ const resolvers = {
       return result[0]
     },
     updateRole: async (_parent: unknown, { id, role }, { db, userData }) => {
-      if (
-        !isAuthorized({
-          userData,
-          resourceName: Resources.roles,
-          action: PermissionAction.update,
-        })
-      ) {
+      const canDo = isAuthorized({
+        userData,
+        resourceName: Resources.roles,
+        action: PermissionAction.update,
+      })
+
+      if (!canDo) {
         throw new Error('Unauthorized')
       }
+
       const result = await db
         .update(roles)
         .set(role)
@@ -309,15 +313,16 @@ const resolvers = {
       return result[0]
     },
     updatePage: async (_parent: unknown, { id, page }, { db, userData }) => {
-      if (
-        !isAuthorized({
-          userData,
-          resourceName: Resources.page,
-          action: PermissionAction.update,
-        })
-      ) {
+      const canDo = isAuthorized({
+        userData,
+        resourceName: Resources.page,
+        action: PermissionAction.update,
+      })
+
+      if (!canDo) {
         throw new Error('Unauthorized')
       }
+
       const result = await db
         .update(pages)
         .set(page)

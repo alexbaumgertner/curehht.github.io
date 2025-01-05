@@ -7,6 +7,7 @@ export type PageProps = {
   id?: string
   title: string
   slug: string
+  slug_name: string
   summary: string
   content: string
 }
@@ -51,6 +52,15 @@ export const PageForm = ({
           type="text"
           name="slug"
           value={formPage.slug}
+          onChange={handleChange}
+        />
+      </Form.Group>
+      <Form.Group>
+        <Form.Label>Slug Name</Form.Label>
+        <Form.Control
+          type="text"
+          name="slug_name"
+          value={formPage.slug_name}
           onChange={handleChange}
         />
       </Form.Group>

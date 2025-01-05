@@ -11,6 +11,7 @@ const GET_PAGE_BY_ID = gql`
     pageById(id: $id) {
       id
       slug
+      slug_name
       title
       summary
       content
@@ -23,6 +24,7 @@ const UPDATE_PAGE_BY_ID = gql`
     updatePage(id: $id, page: $page) {
       id
       slug
+      slug_name
       title
       summary
       content
