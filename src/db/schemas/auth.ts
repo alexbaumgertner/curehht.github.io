@@ -8,7 +8,7 @@ import {
 } from 'drizzle-orm/pg-core'
 import type { AdapterAccountType } from '@auth/core/adapters'
 
-import { roles } from '../schema'
+import { roles } from './role'
 
 export const users = pgTable('user', {
   id: text('id')
