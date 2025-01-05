@@ -16,6 +16,7 @@ const CREATE_PAGE = gql`
 const initPage: PageProps = {
   title: '',
   slug: '',
+  slug_name: '',
   summary: '',
   content: '',
 }
@@ -25,6 +26,14 @@ export default function AdminPagesNew() {
 
   const handleSubmit = (page: PageProps) => {
     createPage({ variables: { page } })
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>
+  }
+
+  if (loading) {
+    return <div>Loading...</div>
   }
 
   return <PageForm page={initPage} onSubmit={handleSubmit} />
