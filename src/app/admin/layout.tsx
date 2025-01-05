@@ -3,7 +3,7 @@
 import React from 'react'
 import { SessionProvider } from 'next-auth/react'
 import { useSession } from 'next-auth/react'
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 import { ClientProvider } from '@/components/Apollo'
 import { AuthPanel } from '@/components'
@@ -18,9 +18,6 @@ export default function AdminLayout({
 }) {
   const { status } = useSession()
   const router = useRouter()
-  const pathname = usePathname()
-
-  console.log('pathname: ', pathname)
 
   if (status !== 'loading' && status !== 'authenticated') {
     router.push('/api/auth/signin')

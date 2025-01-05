@@ -1,7 +1,8 @@
 'use client'
 // ^ this file needs the "use client" pragma
 
-import { HttpLink } from '@apollo/client'
+import { ApolloLink, HttpLink } from '@apollo/client'
+import { onError } from '@apollo/client/link/error'
 import {
   ApolloNextAppProvider,
   ApolloClient,
@@ -9,7 +10,7 @@ import {
 } from '@apollo/experimental-nextjs-app-support'
 
 // have a function to create a client for you
-function makeClient() {
+export function makeClient() {
   const httpLink = new HttpLink({
     // this needs to be an absolute url, as relative urls cannot be used in SSR
     uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
@@ -22,11 +23,22 @@ function makeClient() {
     // const { data } = useSuspenseQuery(MY_QUERY, { context: { fetchOptions: { cache: "force-cache" }}});
   })
 
+  const errorLink = onError(({ graphQLErrors, networkError }) => {
+    if (graphQLErrors)
+      graphQLErrors.forEach(({ message, locations, path }) =>
+        console.error(
+          `_______[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+        )
+      )
+    if (networkError) console.error(`_______[Network error]: ${networkError}`)
+  })
+
   // use the `ApolloClient` from "@apollo/experimental-nextjs-app-support"
   return new ApolloClient({
     // use the `InMemoryCache` from "@apollo/experimental-nextjs-app-support"
     cache: new InMemoryCache(),
-    link: httpLink,
+    credentials: 'include',
+    link: ApolloLink.from([errorLink, httpLink]),
   })
 }
 
